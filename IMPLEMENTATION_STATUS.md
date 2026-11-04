@@ -1,8 +1,14 @@
 # Implementation status
 
+## Phase 1 — Application foundation
+
+Verified Django startup, the initial custom user and framework migrations, PostgreSQL readiness, the static build and the responsive base layout. The application exposes liveness and database readiness endpoints, uses environment-based settings, logs runtime failures and renders safe error pages. Lint, type checking and four tests passed. See [TESTING.md](TESTING.md).
+
+Checkpoint: `phase-01: establish application foundation`. Next phase: relational data models and demo seed data.
+
 ## Phase 0 — Repository reconnaissance and planning
 
-Phase 0 covers the published Git baseline, requirements map, technology decisions, database schema proposal, roadmap, risk assessment, verification strategy and deployment and integration plans. Application work starts in Phase 1 after explicit approval.
+Phase 0 covers the published Git baseline, requirements map, technology decisions, database schema proposal, roadmap, risk assessment, verification strategy and deployment and integration plans. The user approved continuation after this checkpoint.
 
 | Item | Status |
 | --- | --- |
@@ -12,7 +18,7 @@ Phase 0 covers the published Git baseline, requirements map, technology decision
 | Phase 0 checkpoint | `phase-00: document architecture and implementation plan` |
 | Planning verification | PASS. Checked all six deliverables, local Markdown links, coverage of all 14 phase gates, staged whitespace and representative secret patterns |
 | Application and provider verification | Pending the relevant implementation phases. Sandbox account, live merchant onboarding, messaging senders and hosting setup remain future work |
-| Approval gate | Awaiting explicit human approval of Phase 0 before starting Phase 1 |
+| Approval gate | Approved by the user |
 
 See [PROJECT_PLAN.md](PROJECT_PLAN.md), [ARCHITECTURE.md](ARCHITECTURE.md), [TESTING.md](TESTING.md), [DEPLOYMENT.md](DEPLOYMENT.md) and [PAYMENT_INTEGRATION.md](PAYMENT_INTEGRATION.md).
 

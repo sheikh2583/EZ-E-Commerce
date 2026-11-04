@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}403 · Storefront{% endblock %}
+{% block content %}
+  <section class="intro">
+    <h1>You do not have access to this page.</h1>
+    <a href="{% url 'home' %}">Return to the storefront</a>
+  </section>
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}404 · Storefront{% endblock %}
+{% block content %}
+  <section class="intro">
+    <h1>This page could not be found.</h1>
+    <a href="{% url 'home' %}">Return to the storefront</a>
+  </section>
+{% endblock %}

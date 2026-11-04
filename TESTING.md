@@ -21,3 +21,7 @@ Phase 1 will install and pin the verification tools, then document exact setup c
 | Ignore rules | PASS. Git ignored representative environment files, credential files, dependencies and generated output, and allowed `.env.example` |
 | Planning document checks | Recorded in [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md) |
 | Unit tests, integration tests, type checking, application lint, build and browser checks | N/A. The baseline has no application or test suite |
+
+## Phase 1 results
+
+Python 3.13.18 and PostgreSQL 17.11 were used. `uv sync --locked`, `ruff check .`, `mypy config accounts storefront tests`, Django system checks, migration application and drift checks, and four Django tests passed. Production-mode `collectstatic` produced the hashed manifest. Local HTTP readiness returned `ready`, and Chromium verified the base layout, stylesheet, keyboard skip link and absence of horizontal overflow at 375px and 1440px. PostgreSQL ran from the same Docker image declared in Compose, started with the Docker CLI because the Compose plugin was unavailable on this machine.

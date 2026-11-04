@@ -1,0 +1,22 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Storefront{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/store.css' %}">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header"><div class="wrap header-inner">
+    <a class="wordmark" href="{% url 'home' %}">Storefront</a>
+    {% block navigation %}{% endblock %}
+  </div></header>
+  <main id="main" class="wrap" tabindex="-1">
+    {% for message in messages %}<p class="notice" role="status">{{ message }}</p>{% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer"><div class="wrap">{% block footer %}Storefront{% endblock %}</div></footer>
+</body>
+</html>
