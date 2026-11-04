@@ -1,0 +1,7 @@
+{% autoescape off %}{{ title }}
+
+Order reference {{ order.reference }}.
+{% if sandbox %}This payment was verified in the sandbox. No money was collected.
+{% endif %}{% if link %}
+View order details: {{ link }}
+{% endif %}{% endautoescape %}

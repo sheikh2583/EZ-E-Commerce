@@ -22,6 +22,7 @@ from .models import (
     OrderStatusEvent,
     Product,
 )
+from .notifications import enqueue, enqueue_state
 
 QUOTE_SALT = "shop.checkout.v1"
 QUOTE_SECONDS = 15 * 60
@@ -133,6 +134,8 @@ def place_order(request: HttpRequest, token: str) -> Order:
         )
         InventoryReservation.objects.create(item=line, product=product, expires_at=expires_at)
     OrderStatusEvent.objects.create(order=order, actor_id=cart.user_id, current=Order.State.PENDING)
+    enqueue(order, f"placed:{order.pk}", "placed")
+    enqueue(order, f"admin_placed:{order.pk}", "admin_placed")
     cart.state = Cart.State.CLOSED
     cart.save(update_fields=["state", "updated_at"])
     return order
@@ -183,7 +186,8 @@ def expire_unpaid(order_id: int) -> bool:
     change_reservations(order, InventoryReservation.State.RELEASED)
     order.state = Order.State.CANCELLED
     order.save(update_fields=["state", "updated_at"])
-    OrderStatusEvent.objects.create(
+    event = OrderStatusEvent.objects.create(
         order=order, previous=Order.State.PENDING, current=Order.State.CANCELLED, reason="Reservation expired",
     )
+    enqueue_state(order, event.pk)
     return True

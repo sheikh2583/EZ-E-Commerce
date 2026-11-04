@@ -25,6 +25,7 @@
         <div><dt>Delivery</dt><dd>{{ order.delivery|bdt }}</dd></div>
         <div class="total"><dt>Order total</dt><dd>{{ order.total|bdt }}</dd></div>
       </dl>
+      {% if sandbox_paid %}<p class="notice">Sandbox payment verified. No money was charged.</p>{% endif %}
       {% if simulated %}
         <p class="notice">Development simulation complete. No payment was collected and the reservation was released.</p>
       {% elif order.payment_review %}

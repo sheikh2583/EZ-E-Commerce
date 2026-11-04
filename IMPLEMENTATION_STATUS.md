@@ -1,5 +1,11 @@
 # Implementation status
 
+## Phase 9 — Email and SMS notifications
+
+Forty-six tests passed. Verified event deduplication, stable email retry payloads, provider acceptance handling, unknown SMS outcomes, expired leases, suppressed delivery when credentials are absent and expiring guest order access. Actual email and SMS acceptance or delivery is externally blocked by sender credentials and approvals. Lint, types, migration drift and the static build passed. See [TESTING.md](TESTING.md).
+
+Checkpoint: `phase-09: implement email and SMS notifications`. Next: responsive and accessibility refinement.
+
 ## Phase 8 — Administrative dashboard
 
 Forty tests passed. Verified staff authorization, catalogue and zone creation and updates, protected history, product inventory updates, validated raster uploads and removal, storefront settings, order search and payment details, fulfillment transitions and cancellation with inventory release. Local image storage was exercised. Cloudinary acceptance awaits credentials. Lint, types, migration drift and static build passed. See [TESTING.md](TESTING.md).

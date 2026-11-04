@@ -65,6 +65,7 @@ class Payments(TestCase):
         self.assertEqual(self.order.state, Order.State.PENDING)
         self.assertEqual((self.product.stock, self.product.reserved), (0, 0))
         self.assertEqual(PaymentEvent.objects.filter(outcome="verified").count(), 1)
+        self.assertEqual(self.order.notifications.filter(template="paid").count(), 2)
         with patch("shop.gateway.request_json", return_value=self.verification(
             attempt, val_id="validation-2", bank_tran_id="second-bank",
         )):

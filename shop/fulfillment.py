@@ -1,6 +1,7 @@
 from django.db import transaction
 
 from .models import InventoryReservation, Order, OrderStatusEvent, PaymentAttempt
+from .notifications import enqueue_state
 from .orders import change_reservations
 
 NEXT_STATE = {
@@ -44,7 +45,9 @@ def update_order(order_id: int, actor_id: int, *, state: str, tracking_carrier: 
     order.tracking_carrier = tracking_carrier
     order.tracking_number = tracking_number
     order.save(update_fields=["state", "tracking_carrier", "tracking_number", "updated_at"])
-    OrderStatusEvent.objects.create(
+    event = OrderStatusEvent.objects.create(
         order=order, actor_id=actor_id, previous=previous, current=state,
         reason="Tracking updated" if previous == state else "Staff updated order status",
     )
+    if previous != state:
+        enqueue_state(order, event.pk)

@@ -15,6 +15,7 @@ from .models import (
     PaymentAttempt,
     PaymentEvent,
 )
+from .notifications import enqueue, enqueue_state
 from .orders import change_reservations
 
 SUCCESS = {"VALID", "VALIDATED"}
@@ -74,7 +75,9 @@ def cancel_order(order: Order, reason: str, payment_state: Order.PaymentState) -
     order.state = Order.State.CANCELLED
     order.payment_state = payment_state
     order.save(update_fields=["state", "payment_state", "updated_at"])
-    OrderStatusEvent.objects.create(order=order, previous=previous, current=order.state, reason=reason)
+    event = OrderStatusEvent.objects.create(order=order, previous=previous, current=order.state, reason=reason)
+    if payment_state == Order.PaymentState.FAILED:
+        enqueue_state(order, event.pk)
 
 
 @transaction.atomic
@@ -161,6 +164,7 @@ def apply_validation(attempt: PaymentAttempt, validation_id: str, result: dict) 
     order.payment_review = False
     order.save(update_fields=["accepted_payment", "payment_state", "payment_review", "updated_at"])
     audit(attempt, "verified", reference=bank_id)
+    enqueue(order, f"payment:{attempt.pk}", "paid")
     return "verified"
 
 

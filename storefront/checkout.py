@@ -5,7 +5,8 @@ from uuid import UUID
 from django import forms
 from django.conf import settings
 from django.contrib import messages
-from django.http import HttpRequest, HttpResponse
+from django.core.signing import BadSignature
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import (
@@ -15,6 +16,7 @@ from django.views.decorators.http import (
 )
 
 from shop.cart import calculate_totals, cart_items, current_cart
+from shop.guest_access import read_token
 from shop.models import Address, DeliveryZone, Order, PaymentAttempt
 from shop.orders import (
     CheckoutError,
@@ -112,5 +114,18 @@ def order_detail(request: HttpRequest, reference: UUID) -> HttpResponse:
     return render(request, "catalogue/order.html", {
         "order": order,
         "payment_mode": settings.PAYMENT_MODE,
+        "sandbox_paid": bool(order.accepted_payment and order.accepted_payment.mode == "sandbox"),
         "simulated": order.payments.filter(state=PaymentAttempt.State.SIMULATED).exists(),
     })
+
+
+@never_cache
+@require_safe
+def guest_order_access(request: HttpRequest, token: str) -> HttpResponse:
+    try:
+        reference = read_token(token)
+    except BadSignature:
+        raise Http404 from None
+    order = get_object_or_404(Order, reference=reference, user__isnull=True)
+    record_guest_order(request, order)
+    return redirect("order", reference=reference)

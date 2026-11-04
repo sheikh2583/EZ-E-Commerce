@@ -22,3 +22,9 @@ Provider list prices reviewed on 4 November 2026. These estimates assume a low-v
 | Payments | SSLCOMMERZ lists a BDT 25,500 one-time Basic setup fee and 2.5% per successful transaction, with 3.5% for American Express. Confirm the merchant quote and settlement terms. [SSLCOMMERZ pricing](https://sslcommerz.com/pricing/) |
 
 Domain registration, separate demo and production instances, taxes, overages and paid provider tiers add to the estimate.
+
+## Notification configuration
+
+Set `RESEND_API_KEY` and a verified `RESEND_FROM` sender. Set `MIMSMS_USERNAME`, `MIMSMS_API_KEY` and the approved `MIMSMS_SENDER` for transactional SMS, and confirm MiMSMS permits the scheduled job's outbound IPs and domain. Optionally set `NOTIFICATION_ADMIN_EMAIL` and `NOTIFICATION_ADMIN_PHONE` for new-order alerts. Use the public HTTPS origin for links in email. Run `python manage.py send_notifications` periodically.
+
+Outbox rows distinguish queued, accepted, suppressed, failed and unknown. Acceptance includes a provider reference and represents provider intake. Confirm actual delivery in the provider dashboard. Suppressed rows require an intentional resend decision after configuration. Investigate unknown sends before retrying, especially SMS. Use synthetic recipients in tests. [Resend idempotency behavior](https://resend.com/changelog/idempotency-keys), [MiMSMS v2 API](https://apidoc.mimsms.com/).
