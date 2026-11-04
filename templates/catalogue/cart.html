@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load store_format catalogue_art %}
+{% block title %}Your cart · Storefront{% endblock %}
+{% block content %}
+<section class="page-section">
+  <p class="eyebrow">Your selections</p><h1>Shopping cart</h1>
+  {% if items %}
+  <div class="cart-layout">
+    <ul class="cart-items">
+      {% for item in items %}
+      <li class="cart-item">
+        {% with image=item.product|product_images|first %}<img src="{{ image.0 }}" alt="" width="110" height="82">{% endwith %}
+        <div>
+          <h2><a href="{% url 'product' item.product.slug %}">{{ item.product.name }}</a></h2>
+          <p>{{ item.product.unit_price|bdt }} each</p>
+          {% if not item.product.active or not item.product.category.active or item.quantity > item.product.available %}<p class="errorlist">Current availability has changed. Update this item before checkout.</p>{% endif %}
+          <div class="cart-item-actions">
+            <form class="purchase-form" method="post" action="{% url 'cart_update' item.product_id %}">
+              {% csrf_token %}
+              <label class="sr-only" for="quantity-{{ item.pk }}">Quantity for {{ item.product.name }}</label>
+              <input id="quantity-{{ item.pk }}" name="quantity" type="number" min="1" value="{{ item.quantity }}" required>
+              <button class="link-button" type="submit">Update</button>
+            </form>
+            <form method="post" action="{% url 'cart_update' item.product_id %}">
+              {% csrf_token %}<input type="hidden" name="quantity" value="0">
+              <button class="link-button" type="submit">Remove<span class="sr-only"> {{ item.product.name }}</span></button>
+            </form>
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    <aside class="totals" aria-labelledby="cart-summary">
+      <h2 id="cart-summary">Order summary</h2>
+      <dl>
+        <div><dt>Subtotal</dt><dd>{{ totals.subtotal|bdt }}</dd></div>
+        <div><dt>Discount</dt><dd>−{{ totals.discount|bdt }}</dd></div>
+        <div><dt>Delivery</dt><dd>Calculated at checkout</dd></div>
+        <div class="total"><dt>Items total</dt><dd>{{ totals.merchandise|bdt }}</dd></div>
+      </dl>
+      <a href="{% url 'catalogue' %}">Continue shopping</a>
+    </aside>
+  </div>
+  {% else %}
+  <div class="empty-panel"><h2>Your cart is empty</h2><a class="button" href="{% url 'catalogue' %}">Browse products</a></div>
+  {% endif %}
+</section>
+{% endblock %}

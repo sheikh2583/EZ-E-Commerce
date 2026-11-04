@@ -37,3 +37,7 @@ Fifteen tests passed, covering registration, Argon2 hashing, email normalization
 ## Phase 4 — Storefront and product catalogue results
 
 Twenty-one Django tests passed. Chromium verified the homepage, loaded imagery, combined search/category/price/sort filters and product details at 375px and 1440px. Pagination, private visibility for inactive catalogue entries, gallery markup and stock visibility passed. Original category illustrations act as demo fallbacks. Lint, type checking, migration drift and the static build passed.
+
+## Phase 5 — Persistent cart results
+
+Twenty-five tests passed. Guest and account carts persist, merge after sign-in, enforce stock and valid quantities, ignore submitted prices and require CSRF. Chromium verified add, refresh persistence, update and removal at mobile width. Lint, type checking, migration drift and static build passed.

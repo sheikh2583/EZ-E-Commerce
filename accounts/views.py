@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
 from django.core.exceptions import PermissionDenied
 from django.db import IntegrityError, transaction
@@ -12,6 +13,7 @@ from django.views.decorators.http import (
     require_safe,
 )
 
+from shop.cart import merge_guest_cart
 from shop.models import Address
 
 from .forms import AddressForm, LoginForm, ProfileForm, RegistrationForm
@@ -23,6 +25,11 @@ class CustomerLogin(LoginView):
     authentication_form = LoginForm
     redirect_authenticated_user = True
     http_method_names = ["get", "head", "post", "options"]
+
+    def form_valid(self, form: AuthenticationForm) -> HttpResponse:
+        response = super().form_valid(form)
+        merge_guest_cart(self.request)
+        return response
 
 
 @require_http_methods(["GET", "HEAD", "POST"])
@@ -40,6 +47,7 @@ def register(request: HttpRequest) -> HttpResponse:
             form.add_error("email", "An account already uses this email address.")
         else:
             login(request, user)
+            merge_guest_cart(request)
             return redirect("account")
     return render(request, "accounts/form.html", {"form": form, "title": "Create account", "submit": "Create account"})
 
