@@ -57,3 +57,7 @@ Forty tests passed. Verified staff authorization, catalogue and zone creation an
 ## Phase 9 — Email and SMS notifications results
 
 Forty-six tests passed. Verified event deduplication, stable email retry payloads, provider acceptance handling, unknown SMS outcomes, expired leases, suppressed delivery when credentials are absent and expiring guest order access. Actual email and SMS acceptance or delivery is externally blocked by sender credentials and approvals. Lint, types, migration drift and the static build passed.
+
+## Phase 10 — Responsive and accessible UI results
+
+Forty-seven tests passed, including Chromium at 375px and 1440px across storefront, catalogue, product, cart, checkout, login, account and staff views. Keyboard skip navigation passed. Axe WCAG A/AA rules passed after fixing product link names and making the horizontally scrollable orders table keyboard focusable. Checkout progress, pending feedback and browser autofill were added. Lint, types, migration drift and static build passed.

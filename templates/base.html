@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Storefront{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'css/store.css' %}">
+  <script src="{% static 'js/forms.js' %}" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -28,7 +29,7 @@
     {% endblock %}
   </div></header>
   <main id="main" class="wrap" tabindex="-1">
-    {% for message in messages %}<p class="notice" role="status">{{ message }}</p>{% endfor %}
+    {% for message in messages %}<p class="notice notice-{{ message.tags }}" role="{% if message.level == 40 %}alert{% else %}status{% endif %}">{{ message }}</p>{% endfor %}
     {% block content %}{% endblock %}
   </main>
   <footer class="site-footer">

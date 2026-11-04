@@ -1,18 +1,20 @@
 {% load store_format catalogue_art %}
 <article class="product-card">
-  <a class="product-image" href="{% url 'product' product.slug %}" aria-label="{{ product.name }}">
+  <a class="product-tile" href="{% url 'product' product.slug %}">
+  <div class="product-image">
     {% with image=product|product_images|first %}
       <img src="{{ image.0 }}" alt="" width="400" height="300" loading="lazy">
     {% endwith %}
     {% if product.sale_price %}<span class="badge">Sale</span>{% endif %}
-  </a>
+  </div>
   <div class="product-copy">
     <span class="product-category">{{ product.category.name }}</span>
-    <h3><a href="{% url 'product' product.slug %}">{{ product.name }}</a></h3>
+    <h3>{{ product.name }}</h3>
     <p class="price">
       <strong>{{ product.unit_price|bdt }}</strong>
       {% if product.sale_price %}<del>{{ product.regular_price|bdt }}</del>{% endif %}
     </p>
     {% if not product.available %}<p class="availability">Out of stock</p>{% endif %}
   </div>
+  </a>
 </article>

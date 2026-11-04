@@ -1,5 +1,11 @@
 # Implementation status
 
+## Phase 10 — Responsive and accessible UI
+
+Forty-seven tests passed, including Chromium at 375px and 1440px across storefront, catalogue, product, cart, checkout, login, account and staff views. Keyboard skip navigation passed. Axe WCAG A/AA rules passed after fixing product link names and making the horizontally scrollable orders table keyboard focusable. Checkout progress, pending feedback and browser autofill were added. Lint, types, migration drift and static build passed. See [TESTING.md](TESTING.md).
+
+Checkpoint: `phase-10: refine UI and responsive experience`. Next: security and performance audit.
+
 ## Phase 9 — Email and SMS notifications
 
 Forty-six tests passed. Verified event deduplication, stable email retry payloads, provider acceptance handling, unknown SMS outcomes, expired leases, suppressed delivery when credentials are absent and expiring guest order access. Actual email and SMS acceptance or delivery is externally blocked by sender credentials and approvals. Lint, types, migration drift and the static build passed. See [TESTING.md](TESTING.md).

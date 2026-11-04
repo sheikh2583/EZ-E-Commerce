@@ -3,6 +3,7 @@
 {% block title %}Order details · Storefront{% endblock %}
 {% block content %}
 <section class="page-section">
+  <nav aria-label="Checkout progress"><ol class="checkout-steps"><li>Delivery</li><li>Review</li><li aria-current="step">Order</li></ol></nav>
   <p class="eyebrow">Order details</p><h1>Your order</h1>
   <p class="order-reference">Reference {{ order.reference }}</p>
   <div class="cart-layout">
@@ -35,9 +36,10 @@
           <p class="notice">Online payments are currently unavailable.</p>
         {% else %}
           {% if payment_mode == "sandbox" %}<p>Sandbox payment. No money will be charged.</p>{% endif %}
-          <form method="post" action="{% url 'payment_start' order.reference %}">
+          <form method="post" data-pending="Opening payment…" action="{% url 'payment_start' order.reference %}">
             {% csrf_token %}
             <button class="button" type="submit">{% if payment_mode == "simulation" %}Run payment simulation{% else %}Continue to secure payment{% endif %}</button>
+            <span class="form-status" role="status" data-form-status></span>
           </form>
         {% endif %}
       {% endif %}

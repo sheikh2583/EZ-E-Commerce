@@ -1,0 +1,10 @@
+:root, html[data-theme="light"] {
+  --primary: #175341;
+  --secondary: #214337;
+  --accent: #fff5dd;
+  --link-fg: #175341;
+  --link-hover-color: #123b2f;
+  --breadcrumbs-bg: #214337;
+}
+#header { gap: .75rem; }
+#branding { overflow-wrap: anywhere; }

@@ -123,3 +123,20 @@ h1 { font-size: clamp(2.25rem, 5vw, 4.5rem); line-height: 1.05; margin: .5rem 0 
 .orders-table { width: 100%; border-collapse: collapse; background: var(--paper); }
 .orders-table :is(th, td) { padding: .7rem .85rem; border: 1px solid var(--line); text-align: start; }
 .orders-table small { display: block; color: var(--muted); margin-top: .2rem; overflow-wrap: anywhere; }
+h1, .wordmark, .product-copy, .cart-item > div, .totals { overflow-wrap: anywhere; }
+.product-tile { display: block; height: 100%; text-decoration: none; color: var(--ink); }
+.product-tile:focus-visible { outline-offset: -4px; }
+.product-tile:hover h3 { text-decoration: underline; }
+.notice-error { border-color: #bd716d; color: #861c18; }
+.notice-success { border-color: #8ea99a; }
+.checkout-steps { display: flex; flex-wrap: wrap; gap: .5rem 1rem; color: var(--muted); padding-inline-start: 1.4rem; margin-block: 0 1.5rem; }
+.checkout-steps li { padding-inline-end: .5rem; }
+.checkout-steps [aria-current] { color: var(--ink); font-weight: 750; }
+.form-status:not(:empty) { display: block; color: var(--muted); margin-block: .35rem; }
+form[aria-busy="true"] button[type="submit"] { opacity: .75; cursor: progress; }
+@media (max-width: 26rem) {
+  .header-inner { padding-block: .65rem; gap: .4rem; }
+  .site-nav { margin-inline-start: 0; width: 100%; gap: .4rem .85rem; }
+}
+
+.table-scroll:focus-visible { outline: 3px solid #22715a; outline-offset: 3px; }

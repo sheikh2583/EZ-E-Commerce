@@ -36,12 +36,15 @@ class ZoneChoice(forms.ModelChoiceField):
 
 
 class CheckoutForm(forms.Form):
-    recipient = forms.CharField(label="Full name", max_length=120)
-    email = forms.EmailField(max_length=254)
-    phone = forms.CharField(max_length=25, help_text="Enter a Bangladeshi mobile number.")
-    address_line = forms.CharField(label="Street address", max_length=250)
-    locality = forms.CharField(label="City or locality", max_length=100)
-    postcode = forms.CharField(max_length=12, required=False)
+    recipient = forms.CharField(label="Full name", max_length=120, widget=forms.TextInput(attrs={"autocomplete": "name"}))
+    email = forms.EmailField(max_length=254, widget=forms.EmailInput(attrs={"autocomplete": "email"}))
+    phone = forms.CharField(
+        max_length=25, help_text="Enter a Bangladeshi mobile number.",
+        widget=forms.TextInput(attrs={"type": "tel", "autocomplete": "tel"}),
+    )
+    address_line = forms.CharField(label="Street address", max_length=250, widget=forms.TextInput(attrs={"autocomplete": "street-address"}))
+    locality = forms.CharField(label="City or locality", max_length=100, widget=forms.TextInput(attrs={"autocomplete": "address-level2"}))
+    postcode = forms.CharField(max_length=12, required=False, widget=forms.TextInput(attrs={"autocomplete": "postal-code"}))
     zone = ZoneChoice(label="Delivery zone", queryset=DeliveryZone.objects.filter(active=True), empty_label="Select a zone")
     notes = forms.CharField(label="Order notes", required=False, max_length=500, widget=forms.Textarea(attrs={"rows": 3}))
     customer_fields: ClassVar = ("recipient", "email", "phone", "address_line", "locality", "postcode", "notes")
