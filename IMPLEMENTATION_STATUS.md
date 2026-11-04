@@ -1,5 +1,11 @@
 # Implementation status
 
+## Phase 2 — Database and data models
+
+Implemented PostgreSQL models and constraints for catalogue, accounts and addresses, carts, orders and historical items, reservations, delivery, store settings, payments and notifications. Verified migrations, rollback, concurrent stock updates and persistence of 120 synthetic products after restart. See [TESTING.md](TESTING.md).
+
+Checkpoint: `phase-02: implement database schema and seed data`. Next phase: customer authentication and staff authorization.
+
 ## Phase 1 — Application foundation
 
 Verified Django startup, the initial custom user and framework migrations, PostgreSQL readiness, the static build and the responsive base layout. The application exposes liveness and database readiness endpoints, uses environment-based settings, logs runtime failures and renders safe error pages. Lint, type checking and four tests passed. See [TESTING.md](TESTING.md).

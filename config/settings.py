@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "accounts",
     "storefront",
+    "shop",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

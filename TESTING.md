@@ -25,3 +25,7 @@ Phase 1 will install and pin the verification tools, then document exact setup c
 ## Phase 1 results
 
 Python 3.13.18 and PostgreSQL 17.11 were used. `uv sync --locked`, `ruff check .`, `mypy config accounts storefront tests`, Django system checks, migration application and drift checks, and four Django tests passed. Production-mode `collectstatic` produced the hashed manifest. Local HTTP readiness returned `ready`, and Chromium verified the base layout, stylesheet, keyboard skip link and absence of horizontal overflow at 375px and 1440px. PostgreSQL ran from the same Docker image declared in Compose, started with the Docker CLI because the Compose plugin was unavailable on this machine.
+
+## Phase 2 results
+
+The shop migrations applied to the existing Phase 1 database and to a fresh test database. Ten tests passed, including database uniqueness and check constraints, historical snapshot preservation, atomic rollback, repeatable seeding, and a race using two separate PostgreSQL connections to claim the last unit. All 120 fixture SKUs persisted after restarting the PostgreSQL container. Lint, type checks, migration drift and static asset build passed.
