@@ -123,8 +123,13 @@ def order_detail(request: HttpRequest, reference: UUID) -> HttpResponse:
 
 
 @never_cache
-@require_safe
-def guest_order_access(request: HttpRequest, token: str) -> HttpResponse:
+@require_http_methods(["GET", "HEAD", "POST"])
+def guest_order_access(request: HttpRequest) -> HttpResponse:
+    if request.method != "POST":
+        return render(request, "catalogue/guest_access.html")
+    token = request.POST.get("token", "")
+    if len(token) > 512:
+        raise Http404
     try:
         reference = read_token(token)
     except BadSignature:

@@ -47,7 +47,7 @@ class BrowserTests(StaticLiveServerTestCase):
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch()
             for width in (375, 1440):
-                page = browser.new_page(viewport={"width": width, "height": 900})
+                page = browser.new_page(viewport={"width": width, "height": 900}, bypass_csp=bool(os.getenv("AXE_SCRIPT")))
                 page.set_default_timeout(5000)
                 failures: list[str] = []
                 page.on("pageerror", lambda error: failures.append(str(error)))

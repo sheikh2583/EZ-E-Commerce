@@ -344,3 +344,9 @@ class Notification(models.Model):
         indexes = [
             models.Index(fields=["next_attempt_at"], condition=Q(state="queued"), name="notification_queue_due")
         ]
+
+
+class RateBucket(models.Model):
+    key = models.CharField(max_length=64, primary_key=True)
+    hits = models.PositiveIntegerField()
+    expires_at = models.DateTimeField(db_index=True)

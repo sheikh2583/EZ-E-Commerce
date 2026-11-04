@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import dj_database_url
 from django.core.exceptions import ImproperlyConfigured
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    "shop.security.SecurityBoundary",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -102,6 +104,14 @@ SECURE_SSL_REDIRECT = not DEBUG
 SECURE_REDIRECT_EXEMPT = [r"^healthz$"]
 if os.getenv("DJANGO_TRUST_HTTPS_PROXY") == "1":
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+try:
+    DJANGO_FORWARDED_FOR_HOPS = int(os.getenv("DJANGO_FORWARDED_FOR_HOPS", "0"))
+except ValueError as error:
+    raise ImproperlyConfigured("Set DJANGO_FORWARDED_FOR_HOPS to an integer from 0 to 5.") from error
+if not 0 <= DJANGO_FORWARDED_FOR_HOPS <= 5:
+    raise ImproperlyConfigured("Set DJANGO_FORWARDED_FOR_HOPS to an integer from 0 to 5.")
+FILE_UPLOAD_MAX_MEMORY_SIZE = 256 * 1024
+DATA_UPLOAD_MAX_MEMORY_SIZE = 256 * 1024
 SECURE_HSTS_SECONDS = 31_536_000 if not DEBUG else 0
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
@@ -130,10 +140,17 @@ if PAYMENT_MODE == "simulation" and not DEBUG:
 if PAYMENT_MODE in {"sandbox", "live"}:
     if not SSLCOMMERZ_STORE_ID or not SSLCOMMERZ_STORE_PASSWORD:
         raise ImproperlyConfigured("Set SSLCOMMERZ credentials for the selected mode.")
-    if not PUBLIC_BASE_URL.startswith("https://") or "?" in PUBLIC_BASE_URL or "#" in PUBLIC_BASE_URL:
+    if not PUBLIC_BASE_URL:
         raise ImproperlyConfigured("Set a public HTTPS base URL for gateway callbacks.")
     if PAYMENT_MODE == "live" and DEBUG:
         raise ImproperlyConfigured("Live payments require production settings.")
+
+if PUBLIC_BASE_URL:
+    public_origin = urlsplit(PUBLIC_BASE_URL)
+    if (public_origin.scheme != "https" or not public_origin.hostname
+            or public_origin.username or public_origin.password or public_origin.path
+            or public_origin.query or public_origin.fragment):
+        raise ImproperlyConfigured("PUBLIC_BASE_URL must be an HTTPS origin.")
 
 CLOUDINARY_CLOUD_NAME = os.getenv("CLOUDINARY_CLOUD_NAME", "")
 CLOUDINARY_API_KEY = os.getenv("CLOUDINARY_API_KEY", "")

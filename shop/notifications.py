@@ -56,7 +56,7 @@ def message(job: Notification) -> tuple[str, str]:
         elif order.user_id:
             path = reverse("order", args=[order.reference])
         else:
-            path = reverse("guest_order_access", args=[make_token(order)])
+            path = reverse("guest_order_access") + "#" + make_token(order)
         link = settings.PUBLIC_BASE_URL + path
     text = render_to_string("notifications/order.txt", {
         "order": order, "title": title, "link": link, "sandbox": job.template == "paid" and settings.PAYMENT_MODE == "sandbox",

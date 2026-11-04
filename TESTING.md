@@ -61,3 +61,7 @@ Forty-six tests passed. Verified event deduplication, stable email retry payload
 ## Phase 10 — Responsive and accessible UI results
 
 Forty-seven tests passed, including Chromium at 375px and 1440px across storefront, catalogue, product, cart, checkout, login, account and staff views. Keyboard skip navigation passed. Axe WCAG A/AA rules passed after fixing product link names and making the horizontally scrollable orders table keyboard focusable. Checkout progress, pending feedback and browser autofill were added. Lint, types, migration drift and static build passed.
+
+## Phase 11 — Security and performance audit results
+
+Fifty-three tests passed, including Chromium and axe. Added shared per-IP and per-login rate limits, request-size limits, CSP and fragment-based private guest access. Verified CSRF, secure cookies, escaping, parameterized search, authorization, upload safety and replay controls. Replaced vulnerable Pillow 12.3.0 with 13.0.0; pip-audit then found no known runtime dependency vulnerabilities. Django deploy checks had no errors and two documented domain-level HSTS advisories. At 120 fixture SKUs, catalogue rendering stayed within seven queries. Fifteen local requests per route gave median responses of 21.5 ms for home, 23.5 ms for browse and 24.9 ms for filtered browse. PostgreSQL measured the example filtered query at 0.155 ms. Storefront CSS, JS and all demo SVGs totalled 25,721 uncompressed bytes. These measurements cover the local development stack.

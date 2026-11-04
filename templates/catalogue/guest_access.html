@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Open guest order · Storefront{% endblock %}
+{% block content %}
+<section class="page-section form-panel">
+  <h1>Open your order</h1>
+  <p>Use the private access code from your order email.</p>
+  <form method="post" class="stack" id="guest-order-form">
+    {% csrf_token %}
+    <div><label for="guest-token">Access code</label><input id="guest-token" name="token" required maxlength="512" autocomplete="off"></div>
+    <button class="button" type="submit">Open order</button>
+  </form>
+  <script src="{% static 'js/guest-order.js' %}" defer></script>
+</section>
+{% endblock %}
