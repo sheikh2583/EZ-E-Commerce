@@ -9,6 +9,13 @@
       {{ form.as_div }}
       <button class="button" type="submit">Save profile</button>
     </form>
+    <h2>Recent orders</h2>
+    <ul class="address-list">
+      {% for order in orders %}
+        <li><a href="{% url 'order' order.reference %}">{{ order.created_at|date:"j M Y, H:i" }}</a> · {{ order.get_state_display }}</li>
+      {% empty %}<li>No orders yet.</li>{% endfor %}
+    </ul>
+    {% if orders %}<a href="{% url 'order_history' %}">View order history</a>{% endif %}
     <h2>Saved addresses</h2>
     <ul class="address-list">
       {% for address in addresses %}

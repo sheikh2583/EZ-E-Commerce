@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load store_format %}
+{% block title %}Checkout · Storefront{% endblock %}
+{% block content %}
+<section class="page-section">
+  <p class="eyebrow">Delivery details</p><h1>Checkout</h1>
+  <div class="cart-layout">
+    <div class="totals">
+      {% if not user.is_authenticated %}<p>Checkout as a guest or <a href="{% url 'login' %}?next={% url 'checkout' %}">sign in</a>.</p>{% endif %}
+      {% if addresses %}
+      <p>Use a saved address:</p>
+      <ul>{% for address in addresses %}<li><a href="?address={{ address.pk }}">{{ address.label }}</a></li>{% endfor %}</ul>
+      {% endif %}
+      <form method="post" class="stack">
+        {% csrf_token %}{{ form.as_div }}
+        <button class="button" type="submit">Review order</button>
+      </form>
+    </div>
+    <aside class="totals">
+      <h2>Order summary</h2>
+      <dl>
+        <div><dt>Subtotal</dt><dd>{{ totals.subtotal|bdt }}</dd></div>
+        <div><dt>Discount</dt><dd>−{{ totals.discount|bdt }}</dd></div>
+        <div><dt>Items total</dt><dd>{{ totals.merchandise|bdt }}</dd></div>
+        <div><dt>Delivery</dt><dd>Shown at review</dd></div>
+      </dl>
+      <a href="{% url 'cart' %}">Back to cart</a>
+    </aside>
+  </div>
+</section>
+{% endblock %}

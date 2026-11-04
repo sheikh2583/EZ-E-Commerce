@@ -41,3 +41,7 @@ Twenty-one Django tests passed. Chromium verified the homepage, loaded imagery, 
 ## Phase 5 — Persistent cart results
 
 Twenty-five tests passed. Guest and account carts persist, merge after sign-in, enforce stock and valid quantities, ignore submitted prices and require CSRF. Chromium verified add, refresh persistence, update and removal at mobile width. Lint, type checking, migration drift and static build passed.
+
+## Phase 6 — Checkout and order backend results
+
+Twenty-nine tests passed. Checkout calculates BDT totals and zone fees on the server, detects a stale or altered quote, stores historical snapshots and supports replay of the same submission without a second order. Separate PostgreSQL transactions verified that only one cart can reserve the last unit. Expiry released inventory once. Chromium verified mobile guest checkout and order privacy. Lint, types, migration drift and static build passed.

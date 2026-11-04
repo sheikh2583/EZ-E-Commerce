@@ -38,7 +38,10 @@
         <div><dt>Delivery</dt><dd>Calculated at checkout</dd></div>
         <div class="total"><dt>Items total</dt><dd>{{ totals.merchandise|bdt }}</dd></div>
       </dl>
-      <a href="{% url 'catalogue' %}">Continue shopping</a>
+      <div class="summary-actions">
+        <a class="button" href="{% url 'checkout' %}">Go to checkout</a>
+        <a href="{% url 'catalogue' %}">Continue shopping</a>
+      </div>
     </aside>
   </div>
   {% else %}

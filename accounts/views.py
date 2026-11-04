@@ -4,9 +4,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
 from django.core.exceptions import PermissionDenied
+from django.core.paginator import Paginator
 from django.db import IntegrityError, transaction
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.cache import never_cache
 from django.views.decorators.http import (
     require_http_methods,
     require_POST,
@@ -14,7 +16,7 @@ from django.views.decorators.http import (
 )
 
 from shop.cart import merge_guest_cart
-from shop.models import Address
+from shop.models import Address, Order
 
 from .forms import AddressForm, LoginForm, ProfileForm, RegistrationForm
 from .models import User
@@ -52,6 +54,7 @@ def register(request: HttpRequest) -> HttpResponse:
     return render(request, "accounts/form.html", {"form": form, "title": "Create account", "submit": "Create account"})
 
 
+@never_cache
 @login_required
 @require_http_methods(["GET", "HEAD", "POST"])
 def account(request: HttpRequest) -> HttpResponse:
@@ -63,9 +66,21 @@ def account(request: HttpRequest) -> HttpResponse:
         return redirect("account")
     return render(request, "accounts/account.html", {
         "form": form, "addresses": Address.objects.filter(user=request.user).select_related("zone"),
+        "orders": Order.objects.filter(user=request.user)[:5],
     })
 
 
+@never_cache
+@login_required
+@require_safe
+def order_history(request: HttpRequest) -> HttpResponse:
+    assert isinstance(request.user, User)
+    orders = Order.objects.filter(user=request.user)
+    page = Paginator(orders, 20).get_page(request.GET.get("page"))
+    return render(request, "accounts/orders.html", {"page": page})
+
+
+@never_cache
 @login_required
 @require_http_methods(["GET", "HEAD", "POST"])
 def edit_address(request: HttpRequest, pk: int | None = None) -> HttpResponse:

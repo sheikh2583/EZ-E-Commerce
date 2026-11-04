@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load store_format %}
+{% block title %}Order details · Storefront{% endblock %}
+{% block content %}
+<section class="page-section">
+  <p class="eyebrow">Order details</p><h1>Your order</h1>
+  <p class="order-reference">Reference {{ order.reference }}</p>
+  <div class="cart-layout">
+    <div>
+      <div class="totals">
+        <h2>Items</h2>
+        <ul>{% for item in order.items.all %}<li>{{ item.name }} × {{ item.quantity }} · {{ item.charged_unit_price|bdt }} each</li>{% endfor %}</ul>
+      </div>
+      <div class="totals">
+        <h2>Delivery</h2>
+        <p>{{ order.recipient }} · {{ order.address_line }}, {{ order.locality }} {{ order.postcode }}</p>
+        {% if order.tracking_number %}<p>Tracking: {{ order.tracking_carrier }} {{ order.tracking_number }}</p>{% endif %}
+      </div>
+    </div>
+    <aside class="totals">
+      <h2>Order status</h2>
+      <dl>
+        <div><dt>Fulfillment</dt><dd>{{ order.get_state_display }}</dd></div>
+        <div><dt>Payment</dt><dd>{{ order.get_payment_state_display }}</dd></div>
+        <div><dt>Delivery</dt><dd>{{ order.delivery|bdt }}</dd></div>
+        <div class="total"><dt>Order total</dt><dd>{{ order.total|bdt }}</dd></div>
+      </dl>
+      {% block payment_actions %}{% endblock %}
+      <a href="{% url 'catalogue' %}">Continue shopping</a>
+    </aside>
+  </div>
+</section>
+{% endblock %}

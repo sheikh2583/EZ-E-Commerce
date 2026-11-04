@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load store_format %}
+{% block title %}Review order · Storefront{% endblock %}
+{% block content %}
+<section class="page-section">
+  <p class="eyebrow">Confirm your selections</p><h1>Review order</h1>
+  <div class="cart-layout">
+    <div>
+      <div class="totals">
+        <h2>Delivery to {{ customer.recipient }}</h2>
+        <p>{{ customer.address_line }}, {{ customer.locality }} {{ customer.postcode }}</p>
+        <p>{{ customer.email }} · {{ customer.phone }}</p>
+        {% if customer.notes %}<p>{{ customer.notes }}</p>{% endif %}
+      </div>
+      <div class="totals">
+        <h2>Items</h2>
+        <ul>{% for item in quote.items %}<li>{{ item.product.name }} × {{ item.quantity }} · {{ item.product.unit_price|bdt }} each</li>{% endfor %}</ul>
+      </div>
+    </div>
+    <aside class="totals">
+      <h2>Payable total</h2>
+      <dl>
+        <div><dt>Subtotal</dt><dd>{{ quote.subtotal|bdt }}</dd></div>
+        <div><dt>Discount</dt><dd>−{{ quote.discount|bdt }}</dd></div>
+        <div><dt>Delivery · {{ quote.zone.name }}</dt><dd>{{ quote.zone.fee|bdt }}</dd></div>
+        <div class="total"><dt>Total</dt><dd>{{ quote.total|bdt }}</dd></div>
+      </dl>
+      <form class="summary-actions" method="post" action="{% url 'order_submit' %}">
+        {% csrf_token %}<input type="hidden" name="quote" value="{{ token }}">
+        <button class="button" type="submit">Place order</button>
+        <a href="{% url 'checkout' %}">Edit details</a>
+      </form>
+    </aside>
+  </div>
+</section>
+{% endblock %}
