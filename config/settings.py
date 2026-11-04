@@ -113,3 +113,7 @@ LOGGING = {
     "handlers": {"console": {"class": "logging.StreamHandler", "formatter": "standard"}},
     "root": {"handlers": ["console"], "level": os.getenv("DJANGO_LOG_LEVEL", "INFO")},
 }
+
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "account"
+LOGOUT_REDIRECT_URL = "home"

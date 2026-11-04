@@ -8,9 +8,13 @@ Use [uv](https://docs.astral.sh/uv/getting-started/installation/) with Python 3.
 uv sync --locked
 docker compose -p ezcommerce up -d --wait
 uv run python manage.py migrate
+uv run python manage.py setup_roles
+uv run python manage.py seed_demo
 uv run python manage.py runserver
 ```
 
 Open [the local storefront](http://127.0.0.1:8000/). Use `/healthz` for liveness and `/readyz` for database readiness.
 
 See [implementation status](IMPLEMENTATION_STATUS.md) and [testing](TESTING.md) for the verified checkpoint and checks.
+
+Create the first local administrator interactively with `uv run python manage.py createsuperuser`. Customer accounts are created through the storefront. Staff roles are assigned separately by a trusted administrator.

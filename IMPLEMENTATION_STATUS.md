@@ -1,5 +1,11 @@
 # Implementation status
 
+## Phase 3 — Authentication and authorization
+
+Fifteen tests passed, covering registration, Argon2 hashing, email normalization, session rotation, invalid sign-in, sign-out and CSRF, address ownership, and staff permissions on direct requests. The storefront remained accessible as a guest. Lint, type checking, migration drift and the asset build passed. See [TESTING.md](TESTING.md).
+
+Checkpoint: `phase-03: implement authentication and authorization`. Next: storefront and catalogue.
+
 ## Phase 2 — Database and data models
 
 Implemented PostgreSQL models and constraints for catalogue, accounts and addresses, carts, orders and historical items, reservations, delivery, store settings, payments and notifications. Verified migrations, rollback, concurrent stock updates and persistence of 120 synthetic products after restart. See [TESTING.md](TESTING.md).

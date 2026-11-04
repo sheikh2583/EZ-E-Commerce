@@ -29,3 +29,7 @@ Python 3.13.18 and PostgreSQL 17.11 were used. `uv sync --locked`, `ruff check .
 ## Phase 2 results
 
 The shop migrations applied to the existing Phase 1 database and to a fresh test database. Ten tests passed, including database uniqueness and check constraints, historical snapshot preservation, atomic rollback, repeatable seeding, and a race using two separate PostgreSQL connections to claim the last unit. All 120 fixture SKUs persisted after restarting the PostgreSQL container. Lint, type checks, migration drift and static asset build passed.
+
+## Phase 3 — Authentication and authorization results
+
+Fifteen tests passed, covering registration, Argon2 hashing, email normalization, session rotation, invalid sign-in, sign-out and CSRF, address ownership, and staff permissions on direct requests. The storefront remained accessible as a guest. Lint, type checking, migration drift and the asset build passed.

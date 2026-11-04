@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Your account · Storefront{% endblock %}
+{% block content %}
+  <section class="page-section form-panel">
+    <h1>Your account</h1>
+    <p>{{ user.email }}</p>
+    <form method="post" class="stack">
+      {% csrf_token %}
+      {{ form.as_div }}
+      <button class="button" type="submit">Save profile</button>
+    </form>
+    <h2>Saved addresses</h2>
+    <ul class="address-list">
+      {% for address in addresses %}
+        <li>
+          <strong>{{ address.label }}</strong> · {{ address.line }}, {{ address.locality }}
+          <a href="{% url 'address_edit' address.pk %}">Edit <span class="sr-only">{{ address.label }}</span></a>
+          <form method="post" action="{% url 'address_delete' address.pk %}">
+            {% csrf_token %}<button type="submit" class="link-button">Remove <span class="sr-only">{{ address.label }}</span></button>
+          </form>
+        </li>
+      {% empty %}
+        <li>No saved addresses.</li>
+      {% endfor %}
+    </ul>
+    <a href="{% url 'address_add' %}">Add an address</a>
+  </section>
+{% endblock %}
