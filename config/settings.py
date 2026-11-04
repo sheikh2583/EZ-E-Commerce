@@ -1,3 +1,4 @@
+import hashlib
 import os
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -16,7 +17,13 @@ def env_list(name: str, default: str = "") -> list[str]:
 
 DEBUG = os.getenv("DJANGO_DEBUG") == "1"
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "")
+secret_seed = os.getenv("DJANGO_SECRET_SEED", "")
+if not SECRET_KEY and len(secret_seed) >= 43:
+    SECRET_KEY = hashlib.sha512(secret_seed.encode()).hexdigest()
 ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1" if DEBUG else "")
+render_host = os.getenv("RENDER_EXTERNAL_HOSTNAME", "")
+if render_host and render_host not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(render_host)
 CSRF_TRUSTED_ORIGINS = env_list("DJANGO_CSRF_TRUSTED_ORIGINS")
 if not SECRET_KEY or (not DEBUG and len(SECRET_KEY) < 50):
     raise ImproperlyConfigured("Set DJANGO_SECRET_KEY (at least 50 characters outside debug mode).")
@@ -101,7 +108,7 @@ STORAGES = {
     )},
 }
 SECURE_SSL_REDIRECT = not DEBUG
-SECURE_REDIRECT_EXEMPT = [r"^healthz$"]
+SECURE_REDIRECT_EXEMPT = [r"^(?:healthz|readyz)$"]
 if os.getenv("DJANGO_TRUST_HTTPS_PROXY") == "1":
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 try:

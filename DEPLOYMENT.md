@@ -1,6 +1,6 @@
-# Deployment planning
+# Deployment runbook
 
-Provisioning, deployment and live credentials are future phases. This document records the proposed topology and the launch checks.
+The Render Blueprint, build, migration, startup and maintenance scripts are ready for a demo deployment. This runbook separates the locally verified release from the hosted checks that require account access and provider credentials.
 
 ## Environments and configuration
 
@@ -34,3 +34,27 @@ Outbox rows distinguish queued, accepted, suppressed, failed and unknown. Accept
 The application limits sensitive POST endpoints using PostgreSQL counters shared across processes. Schedule `python manage.py prune_rate_limits`. By default, source limits use the socket address. Set `DJANGO_FORWARDED_FOR_HOPS` only behind verified, trusted ingress and test with two independent client IPs and a forged forwarding prefix before enabling public traffic. Set `DJANGO_TRUST_HTTPS_PROXY=1` only when the ingress controls `X-Forwarded-Proto`. HSTS applies to the storefront host. The deployment check reports advisory warnings for including subdomains and preloading. Those settings depend on ownership and HTTPS readiness of the wider domain.
 
 Private guest access tokens stay in the browser URL fragment and are submitted with CSRF protection. They expire 30 days from order creation. Treat any manually copied access code as private. The application accepts only JPEG, PNG and WebP images, enforces byte and pixel limits, and re-encodes uploads before serving them. [Render proxy guidance](https://render.com/articles/how-render-handles-ddos-attacks), [Django deployment checks](https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/).
+
+## Deploy the demo on Render
+
+1. Connect the GitHub repository to Render and create a Blueprint from `main` using [render.yaml](render.yaml). Review the paid web service, paid PostgreSQL 17 instance and scheduled maintenance job before provisioning. Git pushes do not automatically deploy with the supplied Blueprint.
+2. Confirm the demo web host and trusted ingress settings. The generated secret seed is shared by the web and maintenance services. Keep that seed private and stable. Use `DJANGO_ALLOWED_HOSTS` for custom domains. Update `PUBLIC_BASE_URL` to the canonical HTTPS origin once the domain is working. The app includes Render's assigned external hostname automatically on the web service.
+3. The build installs the production lock and collects static files. Pre-deploy runs migrations and prepares the three staff groups. The platform readiness probe calls `/readyz`; `/healthz` checks that the process is serving. Check Gunicorn and maintenance output for errors.
+4. Open the web service shell and run `uv run --no-sync python manage.py createsuperuser` interactively. Use a unique password and a named administrator account. Assign operational accounts only the staff roles they need. Set the store name, contacts and delivery fees in the admin area.
+5. Configure a demo Cloudinary scope for uploads. Test that an uploaded image remains accessible after a web redeploy. Configure SSLCOMMERZ sandbox mode as described in [PAYMENT_INTEGRATION.md](PAYMENT_INTEGRATION.md). To seed the hosted sandbox, run `uv run --no-sync python manage.py seed_demo --allow-hosted-sandbox`. This command refuses to run in live mode.
+6. Exercise a real sandbox payment through the public callback path, then verify payment status and inventory in the staff area. Confirm that the scheduled job processes reservations, gateway reconciliation, notifications and expired rate counters. Add sender credentials only when test recipients and providers are approved.
+
+Use the Render domain setup flow for a custom domain. Publish the exact DNS records Render supplies, wait for certificate issuance, verify HTTPS, and update the canonical origin, allowed hosts and callback settings. [Render Blueprint reference](https://render.com/docs/blueprint-spec), [custom domains](https://render.com/docs/custom-domains).
+
+## Backups, rollback and operational checks
+
+- Use Render Postgres point-in-time recovery and export encrypted logical backups to business-controlled storage under the agreed retention policy. Periodically restore into an isolated database and verify schema, order and product counts, and representative order totals. Back up the Cloudinary product assets separately and test restoring their mappings.
+- Before a release, review migration compatibility with the currently running version and take a recoverable backup. For an application regression, redeploy the last verified commit if its schema is compatible. For a data or schema failure, restore into a separate database, verify it and only then switch the application connection. Retain incident records and reconcile any intervening payments before resuming fulfillment.
+- Review staff payment flags and unknown notification sends routinely. A failed or cancelled provider-confirmed payment releases held stock once. Pending attempts with an unknown outcome require provider reconciliation. Staff can cancel unpaid orders without an unresolved attempt. Paid cancellations require merchant refund and inventory reconciliation.
+- Monitor readiness, errors, rate-limit volume, reconciliation age, notification failures and storage usage. Keep real customer data, exports and credentials out of Git. Apply dependency security updates through the test suite and release checks.
+
+## Live cutover
+
+Provision a distinct live database, media scope, public domain and environment group. Start with real products, shipping rules and branding. Verify merchant onboarding, settlement channels and refund handling. Set `PAYMENT_MODE=live` and the live store credentials in the live environment only. Verify DNS, TLS, staff access, backups, callbacks, provider acceptance and customer support procedures. Record the first merchant-approved live transaction and independently reconcile it before widening access.
+
+The production-mode build, Gunicorn startup, deployment schema and local database restore have been verified. Live hosting, public sandbox callbacks, persistent Cloudinary uploads and external email/SMS acceptance remain unverified until the accounts and configuration are available.

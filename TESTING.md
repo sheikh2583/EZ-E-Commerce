@@ -78,3 +78,7 @@ Set `AXE_SCRIPT` to the path to `axe.min.js` and run the specific responsive and
 ## Phase 12 — End-to-end testing results
 
 Fifty-five tests passed including three Chromium tests. Guest and registered journeys covered browsing, search, multiple items, quantity updates, refresh persistence, server-calculated delivery and discounts, order creation, hosted handoff and callback verification against a controlled provider fixture. Staff exercised catalogue creation, stock updates, photo upload, delivery fees, order search, payment details and tracking. Guest access was recovered in a fresh browser. Real SSLCOMMERZ sandbox checkout remains externally blocked. Lint, types, migration drift and static build passed.
+
+## Phase 13 — Deployment preparation results
+
+Fifty-seven tests passed including the browser journeys. The Render Blueprint matched the official schema, shell scripts passed syntax checks, and the production build, Gunicorn readiness, secure headers, hashed assets, initial admin setup and maintenance entry points passed locally. A PostgreSQL 17 dump restored into an isolated database with matching counts for 120 products, one synthetic order and 23 migrations. Production rejected simulation. Real hosting, sandbox, Cloudinary and messaging checks are externally pending.

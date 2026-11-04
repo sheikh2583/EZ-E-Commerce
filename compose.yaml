@@ -16,3 +16,4 @@ services:
       retries: 15
 volumes:
   ezcommerce-data:
+    name: ezcommerce-data

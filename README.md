@@ -18,3 +18,7 @@ Open [the local storefront](http://127.0.0.1:8000/). Use `/healthz` for liveness
 See [implementation status](IMPLEMENTATION_STATUS.md) and [testing](TESTING.md) for the verified checkpoint and checks.
 
 Create the first local administrator interactively with `uv run python manage.py createsuperuser`. Customer accounts are created through the storefront. Staff roles are assigned separately by a trusted administrator.
+
+For a development-only payment walkthrough, start the server with `PAYMENT_MODE=simulation`. The order page labels the outcome as simulated and keeps payment unverified. For a hosted demo or commercial release, use the [deployment runbook](DEPLOYMENT.md) and [payment integration guide](PAYMENT_INTEGRATION.md).
+
+On the implementation machine, the existing local PostgreSQL container can be started with `docker start ezcommerce-db` when Compose is unavailable.

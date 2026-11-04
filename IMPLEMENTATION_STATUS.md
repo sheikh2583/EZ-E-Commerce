@@ -1,5 +1,11 @@
 # Implementation status
 
+## Phase 13 — Deployment preparation
+
+Fifty-seven tests passed including the browser journeys. The Render Blueprint matched the official schema, shell scripts passed syntax checks, and the production build, Gunicorn readiness, secure headers, hashed assets, initial admin setup and maintenance entry points passed locally. A PostgreSQL 17 dump restored into an isolated database with matching counts for 120 products, one synthetic order and 23 migrations. Production rejected simulation. Real hosting, sandbox, Cloudinary and messaging checks are externally pending. See [TESTING.md](TESTING.md).
+
+Checkpoint: `phase-13: prepare production deployment`. Next: hosted demo setup and provider verification using business accounts.
+
 ## Phase 12 — End-to-end testing
 
 Fifty-five tests passed including three Chromium tests. Guest and registered journeys covered browsing, search, multiple items, quantity updates, refresh persistence, server-calculated delivery and discounts, order creation, hosted handoff and callback verification against a controlled provider fixture. Staff exercised catalogue creation, stock updates, photo upload, delivery fees, order search, payment details and tracking. Guest access was recovered in a fresh browser. Real SSLCOMMERZ sandbox checkout remains externally blocked. Lint, types, migration drift and static build passed. See [TESTING.md](TESTING.md).
@@ -88,6 +94,4 @@ Phase 0 covers the published Git baseline, requirements map, technology decision
 
 See [PROJECT_PLAN.md](PROJECT_PLAN.md), [ARCHITECTURE.md](ARCHITECTURE.md), [TESTING.md](TESTING.md), [DEPLOYMENT.md](DEPLOYMENT.md) and [PAYMENT_INTEGRATION.md](PAYMENT_INTEGRATION.md).
 
-## Next phase after approval
-
-Set up the Django project and dependency lock, the environment and PostgreSQL connection, the initial user migration, logging and validation, and a responsive base layout. Verify the application starts, migrations and database connectivity work, and the build and layout pass their checks.
+The remaining hosted acceptance checks are listed in [DEPLOYMENT.md](DEPLOYMENT.md).
