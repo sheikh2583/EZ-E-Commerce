@@ -1,5 +1,11 @@
 # Implementation status
 
+## Phase 12 — End-to-end testing
+
+Fifty-five tests passed including three Chromium tests. Guest and registered journeys covered browsing, search, multiple items, quantity updates, refresh persistence, server-calculated delivery and discounts, order creation, hosted handoff and callback verification against a controlled provider fixture. Staff exercised catalogue creation, stock updates, photo upload, delivery fees, order search, payment details and tracking. Guest access was recovered in a fresh browser. Real SSLCOMMERZ sandbox checkout remains externally blocked. Lint, types, migration drift and static build passed. See [TESTING.md](TESTING.md).
+
+Checkpoint: `phase-12: complete end-to-end testing`. Next: deployment preparation and externally gated launch checks.
+
 ## Phase 11 — Security and performance audit
 
 Fifty-three tests passed, including Chromium and axe. Added shared per-IP and per-login rate limits, request-size limits, CSP and fragment-based private guest access. Verified CSRF, secure cookies, escaping, parameterized search, authorization, upload safety and replay controls. Replaced vulnerable Pillow 12.3.0 with 13.0.0; pip-audit then found no known runtime dependency vulnerabilities. Django deploy checks had no errors and two documented domain-level HSTS advisories. At 120 fixture SKUs, catalogue rendering stayed within seven queries. Fifteen local requests per route gave median responses of 21.5 ms for home, 23.5 ms for browse and 24.9 ms for filtered browse. PostgreSQL measured the example filtered query at 0.155 ms. Storefront CSS, JS and all demo SVGs totalled 25,721 uncompressed bytes. These measurements cover the local development stack. See [TESTING.md](TESTING.md).
