@@ -1,9 +1,9 @@
 from django import forms
-from django.core.files.storage import default_storage
 from django.db.models import Case, F, IntegerField, QuerySet, Value, When
 from django.db.models.functions import Coalesce
 from django.templatetags.static import static
 
+from shop.media import get_image_url
 from shop.models import Category, Product, ProductImage
 
 CATEGORY_ART = {"home", "kitchen", "desk", "travel", "bath", "garden"}
@@ -74,7 +74,7 @@ def category_image(category: Category) -> str:
 
 
 def image_url(image: ProductImage) -> str:
-    return default_storage.url(image.asset_id)
+    return get_image_url(image.asset_id)
 
 
 def product_images(product: Product) -> list[tuple[str, str]]:

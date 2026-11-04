@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load store_format %}
+{% block title %}Store management{% endblock %}
+{% block content %}
+<section class="page-section">
+  <p class="eyebrow">Operations</p><h1>Store management</h1>
+  <div class="summary-actions">
+    {% if perms.shop.view_order %}<a class="button" href="{% url 'staff_orders' %}">Manage orders</a>{% endif %}
+    {% if perms.shop.view_product or perms.shop.view_storesettings or user.is_superuser %}<a href="{% url 'admin:index' %}">Catalogue and settings</a>{% endif %}
+  </div>
+  {% if order_metrics %}
+  <div class="staff-metrics">
+    {% for label, count in order_metrics.items %}<div class="totals"><h2>{{ label }}</h2><p>{{ count }}</p></div>{% endfor %}
+    <div class="totals"><h2>Verified live revenue</h2><p>{{ revenue|bdt }}</p></div>
+  </div>
+  {% if review_count %}<p class="notice"><a href="{% url 'staff_orders' %}?review=1">{{ review_count }} order{{ review_count|pluralize }} requiring payment review</a></p>{% endif %}
+  {% endif %}
+  {% if perms.shop.view_product %}
+  <div class="totals"><h2>Inventory</h2><p>{{ product_count }} products</p>
+    <h3>Low stock</h3>
+    <ul>{% for item in low_stock %}<li><a href="{% url 'admin:shop_product_change' item.pk %}">{{ item.name }}</a> · {{ item.available }} available</li>
+    {% empty %}<li>No low-stock products.</li>{% endfor %}</ul>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

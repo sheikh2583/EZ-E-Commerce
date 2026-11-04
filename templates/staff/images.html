@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load catalogue_art %}
+{% block title %}Manage product photos{% endblock %}
+{% block content %}
+<section class="page-section">
+  <a href="{% url 'admin:shop_product_change' product.pk %}">Back to product</a>
+  <h1>Manage photos</h1><p>{{ product.name }}</p>
+  <div class="cart-layout">
+    <div class="totals">
+      <h2>Current photos</h2>
+      <ul class="address-list">
+      {% for photo in product.images.all %}
+        <li>{{ photo.alt }}
+        {% if perms.shop.delete_productimage %}
+        <form method="post" action="{% url 'staff_remove_image' product.pk photo.pk %}">
+          {% csrf_token %}<button type="submit" class="link-button">Remove</button>
+        </form>
+        {% endif %}
+        </li>
+      {% empty %}<li>No product photos. The storefront uses a category illustration.</li>{% endfor %}
+      </ul>
+    </div>
+    <div class="totals">
+      <h2>Upload photo</h2><p>Use a JPEG, PNG or WebP still image up to 6 MB.</p>
+      <form class="stack" method="post" enctype="multipart/form-data">
+        {% csrf_token %}{{ form.as_div }}<button class="button" type="submit">Upload photo</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

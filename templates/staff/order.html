@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load store_format %}
+{% block title %}Manage order{% endblock %}
+{% block content %}
+<section class="page-section">
+  <a href="{% url 'staff_orders' %}">Back to orders</a><h1>Order details</h1><p class="order-reference">{{ order.reference }}</p>
+  <div class="cart-layout">
+    <div>
+      <div class="totals">
+        <h2>Customer and delivery</h2>
+        <p>{{ order.recipient }} · {{ order.email }} · {{ order.phone }}</p>
+        <p>{{ order.address_line }}, {{ order.locality }} {{ order.postcode }} · {{ order.zone_name }}</p>
+        {% if order.notes %}<p>{{ order.notes }}</p>{% endif %}
+      </div>
+      <div class="totals">
+        <h2>Items</h2>
+        <ul>{% for item in order.items.all %}<li>{{ item.sku }} · {{ item.name }} × {{ item.quantity }} at {{ item.charged_unit_price|bdt }}</li>{% endfor %}</ul>
+        <p>Delivery {{ order.delivery|bdt }} · Total {{ order.total|bdt }}</p>
+      </div>
+      <div class="totals">
+        <h2>Payments</h2><p>{{ order.get_payment_state_display }}</p>
+        {% if order.payment_review %}<p class="notice">Investigate the payment in the provider dashboard before fulfillment.</p>{% endif %}
+        {% for attempt in order.payments.all %}
+          <p>{{ attempt.provider }} · {{ attempt.mode }} · {{ attempt.get_state_display }} · {{ attempt.amount|bdt }}</p>
+          <p class="order-reference">{{ attempt.merchant_reference }}{% if attempt.provider_reference %} · {{ attempt.provider_reference }}{% endif %}</p>
+          <ul>{% for event in attempt.events.all %}<li>{{ event.created_at|date:"j M H:i" }} · {{ event.outcome }} {{ event.provider_reference }}</li>{% endfor %}</ul>
+        {% empty %}<p>No payment attempts.</p>{% endfor %}
+      </div>
+    </div>
+    <div>
+      <div class="totals">
+        <h2>Fulfillment</h2><p>{{ order.get_state_display }}</p>
+        {% if order.tracking_number %}<p>{{ order.tracking_carrier }} · {{ order.tracking_number }}</p>{% endif %}
+        {% if form %}<form class="stack" method="post">{% csrf_token %}{{ form.as_div }}<button type="submit" class="button">Save order</button></form>{% endif %}
+      </div>
+      <div class="totals"><h2>Activity</h2>
+        <ul>{% for event in order.status_events.all %}<li>{{ event.created_at|date:"j M H:i" }} · {{ event.current }} {{ event.reason }}</li>{% endfor %}</ul>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

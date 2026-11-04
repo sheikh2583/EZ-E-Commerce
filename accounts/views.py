@@ -3,7 +3,6 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
-from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.db import IntegrityError, transaction
 from django.http import HttpRequest, HttpResponse
@@ -103,14 +102,3 @@ def delete_address(request: HttpRequest, pk: int) -> HttpResponse:
     get_object_or_404(Address, pk=pk, user=request.user).delete()
     messages.success(request, "Address removed.")
     return redirect("account")
-
-
-@login_required
-@require_safe
-def staff_home(request: HttpRequest) -> HttpResponse:
-    if not request.user.is_staff or not any(
-        request.user.has_perm(permission)
-        for permission in ("shop.view_order", "shop.view_product", "shop.view_storesettings")
-    ):
-        raise PermissionDenied
-    return render(request, "accounts/staff.html")

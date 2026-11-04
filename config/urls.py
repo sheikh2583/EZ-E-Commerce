@@ -1,9 +1,13 @@
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
 from django.urls import include, path
 
-from accounts.views import staff_home
-from storefront import cart, checkout, payment, views
+from storefront import cart, checkout, payment, staff, views
+
+admin.site.site_header = "Store management"
+admin.site.site_title = "Store management"
+admin.site.index_title = "Catalogue and store settings"
 
 urlpatterns = [
     path("", views.home, name="home"),
@@ -19,7 +23,12 @@ urlpatterns = [
     path("payments/ipn/", payment.ipn, name="payment_ipn"),
     path("payments/return/", payment.payment_return, name="payment_return"),
     path("account/", include("accounts.urls")),
-    path("staff/", staff_home, name="staff"),
+    path("staff/", staff.dashboard, name="staff"),
+    path("staff/orders/", staff.orders, name="staff_orders"),
+    path("staff/orders/<uuid:reference>/", staff.order_detail, name="staff_order"),
+    path("staff/products/<int:pk>/photos/", staff.images, name="staff_images"),
+    path("staff/products/<int:pk>/photos/<int:photo_id>/remove/", staff.remove_image, name="staff_remove_image"),
+    path("staff/catalogue/", admin.site.urls),
     path("healthz", views.health, name="health"),
     path("readyz", views.readiness, name="readiness"),
 ]

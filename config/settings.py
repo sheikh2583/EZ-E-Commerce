@@ -134,3 +134,11 @@ if PAYMENT_MODE in {"sandbox", "live"}:
         raise ImproperlyConfigured("Set a public HTTPS base URL for gateway callbacks.")
     if PAYMENT_MODE == "live" and DEBUG:
         raise ImproperlyConfigured("Live payments require production settings.")
+
+CLOUDINARY_CLOUD_NAME = os.getenv("CLOUDINARY_CLOUD_NAME", "")
+CLOUDINARY_API_KEY = os.getenv("CLOUDINARY_API_KEY", "")
+CLOUDINARY_API_SECRET = os.getenv("CLOUDINARY_API_SECRET", "")
+if any((CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET)) and not all(
+    (CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET)
+):
+    raise ImproperlyConfigured("Set all Cloudinary configuration values together.")
