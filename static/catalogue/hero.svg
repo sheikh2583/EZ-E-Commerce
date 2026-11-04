@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="740" height="460" viewBox="0 0 740 460" role="img" aria-labelledby="title">
+  <title id="title">Sunlit still life with a leafy vase, woven basket and stoneware</title>
+  <defs>
+    <linearGradient id="paper" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#f5e3c8"/>
+      <stop offset="1" stop-color="#d3ad8e"/>
+    </linearGradient>
+    <radialGradient id="shade">
+      <stop stop-color="#3c3024" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#3c3024" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <path fill="url(#paper)" d="M0 0h740v460H0z"/>
+<defs>
+  <linearGradient id="sun" x2="0" y2="1">
+    <stop stop-color="#fff3d9"/>
+    <stop offset="1" stop-color="#e7bfa0"/>
+  </linearGradient>
+  <linearGradient id="clay" x2="1" y2="0">
+    <stop stop-color="#d58560"/>
+    <stop offset=".53" stop-color="#b65e42"/>
+    <stop offset="1" stop-color="#974c36"/>
+  </linearGradient>
+  <linearGradient id="woven" x2="1" y2="0">
+    <stop stop-color="#d4a773"/>
+    <stop offset="1" stop-color="#a2764d"/>
+  </linearGradient>
+  <linearGradient id="glaze" x2="1" y2="0">
+    <stop stop-color="#97a88b"/>
+    <stop offset="1" stop-color="#5c7564"/>
+  </linearGradient>
+  <clipPath id="basket"><path d="M131 305h186l-18 76q-5 19-28 19h-94q-22 0-28-19z"/></clipPath>
+</defs>
+<path d="M168 358V172a120 120 0 0 1 240 0v186z" fill="url(#sun)" opacity=".85"/>
+<path d="M0 390 740 353v107H0z" fill="#d4a689"/>
+<path d="M0 418 740 366v94H0z" fill="#dcb394" opacity=".73"/>
+<path d="M608 0h132v214L575 33z" fill="#f7e4c7" opacity=".45"/>
+<ellipse cx="390" cy="402" rx="266" ry="34" fill="url(#shade)"/>
+<ellipse cx="506" cy="412" rx="191" ry="18" fill="url(#shade)"/>
+<path fill="none" stroke="#536649" stroke-width="4" d="M431 262c-6-67 10-134 26-191m-30 159c-3-39-29-71-54-91m58 69c12-32 36-53 71-65m-62 30c10-40 32-67 55-82m-60 102c-8-44-30-68-45-80"/>
+<path fill="#647756" d="M448 114c-1-34 10-55 40-75-4 31-18 56-40 75m-19 45c-24-11-40-31-44-59 25 10 41 30 44 59m25 4c11-34 33-56 64-59-13 27-36 48-64 59m-45 23c-26-6-50-25-57-55 29 8 49 28 57 55m38 18c21-32 50-46 83-40-19 23-47 37-83 40"/>
+<path fill="#81936b" d="M456 105c12-22 17-35 25-55-15 12-23 29-25 55m5 54c20-18 34-33 49-48-20 5-36 20-49 48m-61 17c-14-19-28-28-40-36 8 16 22 30 40 36"/>
+<path d="M408 222h48v33c0 13 7 22 20 32 34 28 39 78 10 103-21 19-88 19-109 0-29-25-24-75 10-103 12-10 21-19 21-32z" fill="url(#clay)"/>
+<path d="M413 232h13v25c0 19-26 35-36 52-18 28-15 58 1 77-29-16-33-54-8-88 14-18 30-26 30-44z" fill="#eca481" opacity=".42"/>
+<path d="M371 352c28 10 87 12 124 0m-121 11c32 10 88 10 119 0m-112 11c29 10 77 10 106 0" stroke="#f0a882" opacity=".39" stroke-width="2" fill="none"/>
+<ellipse cx="432" cy="222" rx="24" ry="6" fill="#7e402c"/>
+<path d="M156 318v-19a47 47 0 0 1 94 0v19" fill="none" stroke="#a1744b" stroke-width="14"/>
+<path d="M156 314v-15a47 47 0 0 1 94 0v15" fill="none" stroke="#d7ad79" stroke-width="4" stroke-dasharray="2 2"/>
+<path d="M131 305h186l-18 76q-5 19-28 19h-94q-22 0-28-19z" fill="url(#woven)"/>
+<g clip-path="url(#basket)" opacity=".8">
+  <path d="M128 314h195m-193 10h191m-189 10h189m-186 10h181m-178 10h175m-172 10h170m-168 10h167m-160 10h153m-149 10h143" stroke="#ecd0a1" stroke-width="3" fill="none"/>
+  <path d="m145 300 28 108m-7-108 23 108m-2-108 17 108m3-108 12 108m8-108 6 108m15-108-2 108m22-108-9 108m29-108-17 108m39-108-28 108" stroke="#8d623e" stroke-width="2" fill="none"/>
+</g>
+<ellipse cx="224" cy="306" rx="93" ry="10" fill="#8e6545"/>
+<path d="M131 307c34 10 154 10 186 0" stroke="#e6c595" stroke-width="4" fill="none"/>
+<path d="M526 358h138c-8 26-31 45-59 48h-20c-28-3-51-22-59-48z" fill="url(#glaze)"/>
+<ellipse cx="595" cy="358" rx="69" ry="17" fill="#a5b497"/>
+<ellipse cx="595" cy="359" rx="59" ry="10" fill="#758d76"/>
+<path d="M540 361q55-13 110 0" stroke="#bcc7ab" stroke-width="1.6" fill="none"/>
+</svg>

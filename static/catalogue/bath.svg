@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300" role="img" aria-labelledby="title">
+  <title id="title">Folded cotton towels and a ceramic soap dish</title>
+  <defs>
+    <linearGradient id="paper" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#e7ebde"/>
+      <stop offset="1" stop-color="#b7c4b2"/>
+    </linearGradient>
+    <radialGradient id="shade">
+      <stop stop-color="#3c3024" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#3c3024" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <path fill="url(#paper)" d="M0 0h400v300H0z"/>
+<path fill="#f6f4e4" opacity=".62" d="M36 0h115l99 223H132z"/>
+<path fill="#a8b4a1" d="M0 233h400v67H0z"/>
+<ellipse cx="205" cy="251" rx="150" ry="20" fill="url(#shade)"/>
+<rect x="75" y="206" width="172" height="42" rx="19" fill="#6c8374"/>
+<path fill="none" stroke="#99ab9d" stroke-width="2.5" d="M100 216h112c15 0 15 22 0 22H100m0-13h109c4 0 4 5 0 5H100"/>
+<rect x="91" y="176" width="150" height="36" rx="16" fill="#d1a991"/>
+<path fill="none" stroke="#ead0bd" stroke-width="2.5" d="M111 184h100c15 0 15 19 0 19H111m0-11h97c4 0 4 4 0 4h-97"/>
+<rect x="109" y="146" width="120" height="34" rx="15" fill="#f2e2c9"/>
+<path fill="none" stroke="#d6c5a7" stroke-width="2.5" d="M126 155h74c12 0 12 17 0 17h-74m0-10h72c4 0 4 4 0 4h-72"/>
+<path fill="#c79673" d="M238 226q0-14 49-14t49 14l-8 16q-4 8-41 8t-41-8z"/>
+<ellipse cx="287" cy="226" rx="49" ry="14" fill="#e3b694"/>
+<path fill="#f5d7aa" d="M268 197h38q9 0 10 8l2 11q1 8-8 9h-45q-9 0-8-9l2-11q1-8 9-8z"/>
+<path fill="#fbe4be" d="M268 198h37q8 0 9 8l1 7q-1 4-8 4h-40q-7 0-7-4l1-7q1-8 7-8z"/>
+<path fill="#74886b" d="M276 186c3-13 11-21 25-23-3 13-11 20-25 23z"/>
+</svg>

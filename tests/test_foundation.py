@@ -1,10 +1,10 @@
 from unittest.mock import patch
 
 from django.db import OperationalError, connection
-from django.test import SimpleTestCase, TestCase
+from django.test import TestCase
 
 
-class FoundationPages(SimpleTestCase):
+class FoundationPages(TestCase):
     def test_home_renders_the_base_layout(self):
         response = self.client.get("/")
         self.assertContains(response, '<meta name="viewport"')

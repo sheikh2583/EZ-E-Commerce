@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300" role="img" aria-labelledby="title">
+  <title id="title">Potted leaves and a watering can</title>
+  <defs>
+    <linearGradient id="paper" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#f0ead0"/>
+      <stop offset="1" stop-color="#c2c7a1"/>
+    </linearGradient>
+    <radialGradient id="shade">
+      <stop stop-color="#3c3024" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#3c3024" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <path fill="url(#paper)" d="M0 0h400v300H0z"/>
+<path fill="#f8f0d9" opacity=".65" d="M174 217V105a75 75 0 1 1 150 0v112z"/>
+<path fill="#aeb28e" d="M0 234h400v66H0z"/>
+<ellipse cx="206" cy="250" rx="158" ry="19" fill="url(#shade)"/>
+<path d="M232 173c-7-41 17-93 24-114m-20 92c-5-31-16-49-34-66m33 72c14-24 35-30 50-35m-44 19c10-31 28-46 43-53" fill="none" stroke="#596a45" stroke-width="3"/>
+<path fill="#697d55" d="M249 91c-3-18 5-34 24-48-1 22-9 39-24 48m-24 33c-21-4-35-17-38-40 18 6 31 20 38 40m22 4c10-22 27-33 49-32-9 19-24 31-49 32m2 21c17-20 38-26 58-20-16 17-35 23-58 20"/>
+<path fill="#a7563b" d="M190 170h89l-14 71q-2 9-12 9h-37q-10 0-12-9z"/>
+<path fill="#cd805d" d="M193 172h28l6 76h-10q-10 0-12-9z"/>
+<rect x="186" y="165" width="96" height="16" rx="4" fill="#b96a48"/>
+<path d="M102 193c-33-18-41-47-18-53 17-5 34 10 39 30" fill="none" stroke="#5a6f66" stroke-width="9"/>
+<path fill="#657d71" d="m145 195 45-38 10 10-44 50z"/>
+<path fill="#7d9484" d="M97 172h62l12 65q2 10-11 10h-64q-13 0-11-10z"/>
+<path fill="#a1b2a0" d="M99 175h12l-10 62q-1 5 3 9h-8q-8 0-6-8z"/>
+<ellipse cx="128" cy="173" rx="30" ry="7" fill="#577064"/>
+<path fill="#4f675d" d="m184 154 20-8 9 16-17 11z"/>
+</svg>

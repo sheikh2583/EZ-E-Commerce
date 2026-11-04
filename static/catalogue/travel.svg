@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300" role="img" aria-labelledby="title">
+  <title id="title">Canvas tote and reusable water bottle</title>
+  <defs>
+    <linearGradient id="paper" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#f4dcc2"/>
+      <stop offset="1" stop-color="#d8a68c"/>
+    </linearGradient>
+    <radialGradient id="shade">
+      <stop stop-color="#3c3024" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#3c3024" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <path fill="url(#paper)" d="M0 0h400v300H0z"/>
+<path fill="#f7e6ce" opacity=".7" d="M160 219V96a76 76 0 0 1 152 0v123z"/>
+<path fill="#c9957b" d="M0 235h400v65H0z"/>
+<ellipse cx="199" cy="254" rx="150" ry="22" fill="url(#shade)"/>
+<path d="M123 123v-17c0-51 67-51 67 0v17m-41 0v-15c0-42 54-42 54 0v15" fill="none" stroke="#766a4d" stroke-width="8"/>
+<path fill="#b7a477" d="M96 118h132l-9 116-10 15H115l-10-15z"/>
+<path fill="#d6c49a" d="M97 118h124l-7 119q-1 12-12 12h-85q-11 0-12-12z"/>
+<path d="M109 131h98m-91 102h91m-91-89 5 79m80-79-3 79" fill="none" stroke="#a49168" stroke-width="1.6" stroke-dasharray="3 2"/>
+<path fill="#c1ae83" d="M135 165h53v46q-1 7-9 7h-35q-8 0-9-7z"/>
+<path d="M139 169h45m-44 37q3 7 8 7h28q6 0 8-7" fill="none" stroke="#9d8a63" stroke-width="1.4"/>
+<path fill="#5a7566" d="M264 117h22v22q0 8 10 15 9 6 9 15v68q0 14-14 14h-32q-14 0-14-14v-68q0-9 9-15 10-7 10-15z"/>
+<path fill="#8ba394" opacity=".62" d="M251 174q0-10 9-16v77q0 8 5 11h-6q-8 0-8-9z"/>
+<rect x="262" y="106" width="26" height="19" rx="4" fill="#3d554a"/>
+<path stroke="#a9b9a7" stroke-width="1.5" d="M262 218h26"/>
+</svg>

@@ -1,8 +1,43 @@
 {% extends "base.html" %}
+{% load static catalogue_art %}
 {% block content %}
-  <section class="intro">
-    <p class="eyebrow">Store preview</p>
-    <h1>Welcome to the storefront</h1>
-    <p>Our catalogue is being prepared.</p>
+  <section class="shop-hero" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <p class="eyebrow">The everyday collection</p>
+      <h1 id="hero-title">{{ store.banner_title|default:"Everyday essentials" }}</h1>
+      <p>{{ store.banner_body|default:"Explore considered finds for home, work and the road." }}</p>
+      <a class="button" href="{% url 'catalogue' %}">Shop the collection <span aria-hidden="true">↗</span></a>
+      <form class="quick-search" action="{% url 'catalogue' %}" role="search">
+        <label class="sr-only" for="home-search">Search products</label>
+        <input id="home-search" name="q" type="search" placeholder="Find a product" maxlength="100">
+        <button type="submit">Search</button>
+      </form>
+    </div>
+    <img src="{% static 'catalogue/hero.svg' %}" alt="" class="hero-art" width="760" height="470" fetchpriority="high">
   </section>
+  {% if categories %}
+  <section class="shop-section" aria-labelledby="categories">
+    <div class="section-heading"><div><p class="eyebrow">Explore the store</p><h2 id="categories">Shop by category</h2></div></div>
+    <div class="category-grid">
+      {% for category in categories %}
+      <a class="category-tile" href="{% url 'catalogue' %}?category={{ category.slug|urlencode }}">
+        <img src="{{ category|category_image }}" alt="" width="400" height="300" loading="lazy">
+        <span>{{ category.name }} <span aria-hidden="true">↗</span></span>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+  {% if featured %}
+  <section class="shop-section" aria-labelledby="featured">
+    <div class="section-heading"><div><p class="eyebrow">Handpicked</p><h2 id="featured">Featured finds</h2></div><a href="{% url 'catalogue' %}">View all</a></div>
+    <div class="product-grid">{% for product in featured %}{% include 'catalogue/_card.html' %}{% endfor %}</div>
+  </section>
+  {% endif %}
+  {% if recent %}
+  <section class="shop-section" aria-labelledby="recent">
+    <div class="section-heading"><div><p class="eyebrow">Fresh additions</p><h2 id="recent">New arrivals</h2></div><a href="{% url 'catalogue' %}?sort=newest">Browse new arrivals</a></div>
+    <div class="product-grid">{% for product in recent %}{% include 'catalogue/_card.html' %}{% endfor %}</div>
+  </section>
+  {% endif %}
 {% endblock %}

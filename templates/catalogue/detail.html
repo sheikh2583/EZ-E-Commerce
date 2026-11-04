@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load store_format %}
+{% block title %}{{ product.name }} · {{ store.display_name|default:"Storefront" }}{% endblock %}
+{% block content %}
+  <section class="page-section">
+    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="{% url 'catalogue' %}">Browse</a> / <a href="{% url 'catalogue' %}?category={{ product.category.slug|urlencode }}">{{ product.category.name }}</a></nav>
+    <div class="detail-grid">
+      <div class="image-gallery">
+        {% for image, alt in images %}
+        <img src="{{ image }}" alt="{{ alt }}" width="600" height="450"{% if not forloop.first %} loading="lazy"{% endif %}>
+        {% endfor %}
+      </div>
+      <div class="detail-copy">
+        <p class="eyebrow">{{ product.category.name }}</p>
+        <h1>{{ product.name }}</h1>
+        <p class="price"><strong>{{ product.unit_price|bdt }}</strong>{% if product.sale_price %} <del>{{ product.regular_price|bdt }}</del>{% endif %}</p>
+        <p>{{ product.description|linebreaksbr }}</p>
+        <p class="availability">{% if product.available %}In stock{% else %}Out of stock{% endif %}</p>
+        <p class="product-category">SKU {{ product.sku }}</p>
+      </div>
+    </div>
+  </section>
+  {% if related %}
+  <section class="shop-section">
+    <div class="section-heading"><h2>More from {{ product.category.name }}</h2></div>
+    <div class="product-grid">{% for product in related %}{% include 'catalogue/_card.html' %}{% endfor %}</div>
+  </section>
+  {% endif %}
+{% endblock %}

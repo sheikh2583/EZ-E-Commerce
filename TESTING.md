@@ -33,3 +33,7 @@ The shop migrations applied to the existing Phase 1 database and to a fresh test
 ## Phase 3 — Authentication and authorization results
 
 Fifteen tests passed, covering registration, Argon2 hashing, email normalization, session rotation, invalid sign-in, sign-out and CSRF, address ownership, and staff permissions on direct requests. The storefront remained accessible as a guest. Lint, type checking, migration drift and the asset build passed.
+
+## Phase 4 — Storefront and product catalogue results
+
+Twenty-one Django tests passed. Chromium verified the homepage, loaded imagery, combined search/category/price/sort filters and product details at 375px and 1440px. Pagination, private visibility for inactive catalogue entries, gallery markup and stock visibility passed. Original category illustrations act as demo fallbacks. Lint, type checking, migration drift and the static build passed.

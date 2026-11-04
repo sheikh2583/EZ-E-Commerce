@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300" role="img" aria-labelledby="title">
+  <title id="title">Stoneware bowl, mug and wooden spoon</title>
+  <defs>
+    <linearGradient id="paper" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#f7e5cc"/>
+      <stop offset="1" stop-color="#e3c3a3"/>
+    </linearGradient>
+    <radialGradient id="shade">
+      <stop stop-color="#3c3024" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#3c3024" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <path fill="url(#paper)" d="M0 0h400v300H0z"/>
+<path fill="#f9eed8" opacity=".62" d="M31 212 265 0h103L132 218z"/>
+<path fill="#dcb194" d="M0 223h400v77H0z"/>
+<ellipse cx="203" cy="249" rx="151" ry="20" fill="url(#shade)"/>
+<path fill="#9b593e" d="M238 223q-3-5 3-12l49-66c-8-13-5-26 4-40 10-16 25-23 34-17s9 22-1 38c-9 15-21 23-36 20l-45 72q-5 8-8 5z"/>
+<path fill="#bf845c" d="M244 211l46-69c-8-14-3-28 5-39 10-13 20-19 29-17-8 1-18 8-25 19-10 15-10 28-4 34l-48 75z"/>
+<path d="M131 138h19c31 0 34 39 4 44h-18" fill="none" stroke="#a36c44" stroke-width="12"/>
+<path fill="#bd8356" d="M76 129h67l-8 76q-1 10-11 10h-28q-10 0-11-10z"/>
+<path fill="#d49d71" d="M82 131h11l7 70q1 9 7 14H96q-10 0-11-10z"/>
+<ellipse cx="109.5" cy="129" rx="33.5" ry="9" fill="#dfac7c"/>
+<ellipse cx="109.5" cy="130" rx="26" ry="5" fill="#754b35"/>
+<path fill="#687357" d="M137 199h142c-4 26-29 44-58 50h-26c-29-6-54-24-58-50z"/>
+<path fill="#8f9d7b" d="M137 199h142c-9 18-32 25-71 25s-62-7-71-25z"/>
+<ellipse cx="208" cy="199" rx="71" ry="21" fill="#a9b494"/>
+<ellipse cx="208" cy="200" rx="61" ry="14" fill="#748262"/>
+<path fill="none" stroke="#bfc6ac" stroke-width="1.5" d="M157 200q50-15 102 0"/>
+</svg>
