@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=https://render.com/schema/render.yaml.json
+services:
+  - type: web
+    name: ez-e-commerce-demo
+    runtime: python
+    region: singapore
+    plan: free
+    branch: main
+    autoDeployTrigger: "off"
+    buildCommand: ./scripts/build-web.sh
+    startCommand: ./scripts/release-web.sh && exec ./scripts/start-web.sh
+    healthCheckPath: /readyz
+    envVars:
+      - fromGroup: ez-e-commerce-free-demo-config
+      - key: DJANGO_DEMO_CATALOGUE
+        value: "1"
+      - key: PAYMENT_MODE
+        value: disabled
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ez-e-commerce-demo-db
+          property: connectionString
+
+databases:
+  - name: ez-e-commerce-demo-db
+    region: singapore
+    plan: free
+    postgresMajorVersion: "17"
+    ipAllowList: []
+
+envVarGroups:
+  - name: ez-e-commerce-free-demo-config
+    envVars:
+      - key: DJANGO_SECRET_SEED
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "0"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: ez-e-commerce-demo.onrender.com
+      - key: DJANGO_TRUST_HTTPS_PROXY
+        value: "1"
+      - key: DJANGO_FORWARDED_FOR_HOPS
+        value: "1"
+      - key: UV_VERSION
+        value: "0.13.7"

@@ -58,3 +58,7 @@ Use the Render domain setup flow for a custom domain. Publish the exact DNS reco
 Provision a distinct live database, media scope, public domain and environment group. Start with real products, shipping rules and branding. Verify merchant onboarding, settlement channels and refund handling. Set `PAYMENT_MODE=live` and the live store credentials in the live environment only. Verify DNS, TLS, staff access, backups, callbacks, provider acceptance and customer support procedures. Record the first merchant-approved live transaction and independently reconcile it before widening access.
 
 The production-mode build, Gunicorn startup, deployment schema and local database restore have been verified. Live hosting, public sandbox callbacks, persistent Cloudinary uploads and external email/SMS acceptance remain unverified until the accounts and configuration are available.
+
+## Free Render demo
+
+Create a Blueprint from `main` using `render.free.yaml` as its Blueprint Path. It provisions a free web service and a private free PostgreSQL database in the same region. The web service applies migrations, creates the staff groups and seeds 120 synthetic products at startup. Payments are disabled for the free demo. Scheduled maintenance and shell access require a paid instance. Use synthetic customer details only. The free web service sleeps after idle periods, and the free database expires after 30 days. [Render free tier](https://render.com/docs/free)
