@@ -18,3 +18,11 @@ shurjoPay is the fallback candidate because it also offers separate test/live en
 ## Phase 7 evidence
 
 Test real sandbox success, failure and cancellation. Record gateway evidence for invalid, repeated, late and mismatched callbacks, missing notifications, pending reconciliation, verification timeouts and unknown initiation. Confirm reservation behavior, audit events and repeat delivery of notification inputs. Phase 7 must document any provider operation that could not be exercised and why.
+
+## Configuring and exercising the implementation
+
+Set `PAYMENT_MODE=sandbox` with sandbox store credentials and the application's public HTTPS origin in `PUBLIC_BASE_URL`. Register `/payments/ipn/` as the IPN listener. The checkout session sets `/payments/return/` for customer success, failure and cancellation. Run `python manage.py reconcile_payments` periodically. Unknown or missing gateway results stay pending. Staff must investigate long-running unknown cases and review flags. Release a reservation only after a confirmed terminal outcome or when payment was never initiated and the reservation expired.
+
+For local-only testing, run with `DJANGO_DEBUG=1 PAYMENT_MODE=simulation`. The order screen labels the simulation, records a distinct attempt state, and releases the reservation. Production settings reject simulation and debug settings reject live payments. `PAYMENT_MODE=disabled` is the default. Switch to live using a separate environment and merchant credentials, then exercise callback reachability and provider acceptance under the merchant's approved launch procedure.
+
+Phase 7 executed the application against controlled provider HTTP responses for success, failure, cancellation, wrong references, amount mismatch, gateway unavailability, duplicate callbacks and late or extra captures. Live network verification against the sandbox remains **externally blocked** by merchant test credentials and a public HTTPS callback endpoint.

@@ -3,6 +3,7 @@ from typing import ClassVar
 from uuid import UUID
 
 from django import forms
+from django.conf import settings
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -14,7 +15,7 @@ from django.views.decorators.http import (
 )
 
 from shop.cart import calculate_totals, cart_items, current_cart
-from shop.models import Address, DeliveryZone, Order
+from shop.models import Address, DeliveryZone, Order, PaymentAttempt
 from shop.orders import (
     CheckoutError,
     get_quote,
@@ -108,4 +109,8 @@ def order_detail(request: HttpRequest, reference: UUID) -> HttpResponse:
         Order.objects.filter(visible_orders(request)).prefetch_related("items", "status_events"),
         reference=reference,
     )
-    return render(request, "catalogue/order.html", {"order": order})
+    return render(request, "catalogue/order.html", {
+        "order": order,
+        "payment_mode": settings.PAYMENT_MODE,
+        "simulated": order.payments.filter(state=PaymentAttempt.State.SIMULATED).exists(),
+    })

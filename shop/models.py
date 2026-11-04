@@ -296,6 +296,7 @@ class PaymentEvent(models.Model):
     attempt = models.ForeignKey(PaymentAttempt, models.PROTECT, related_name="events")
     fingerprint = models.CharField(max_length=64)
     outcome = models.CharField(max_length=40)
+    provider_reference = models.CharField(max_length=100, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

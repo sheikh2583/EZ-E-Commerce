@@ -25,7 +25,21 @@
         <div><dt>Delivery</dt><dd>{{ order.delivery|bdt }}</dd></div>
         <div class="total"><dt>Order total</dt><dd>{{ order.total|bdt }}</dd></div>
       </dl>
-      {% block payment_actions %}{% endblock %}
+      {% if simulated %}
+        <p class="notice">Development simulation complete. No payment was collected and the reservation was released.</p>
+      {% elif order.payment_review %}
+        <p class="notice">Your payment requires review. Please contact the store before trying again.</p>
+      {% elif order.state == "pending" and order.payment_state != "paid" %}
+        {% if payment_mode == "disabled" %}
+          <p class="notice">Online payments are currently unavailable.</p>
+        {% else %}
+          {% if payment_mode == "sandbox" %}<p>Sandbox payment. No money will be charged.</p>{% endif %}
+          <form method="post" action="{% url 'payment_start' order.reference %}">
+            {% csrf_token %}
+            <button class="button" type="submit">{% if payment_mode == "simulation" %}Run payment simulation{% else %}Continue to secure payment{% endif %}</button>
+          </form>
+        {% endif %}
+      {% endif %}
       <a href="{% url 'catalogue' %}">Continue shopping</a>
     </aside>
   </div>

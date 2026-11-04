@@ -118,3 +118,19 @@ LOGGING = {
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "account"
 LOGOUT_REDIRECT_URL = "home"
+
+PAYMENT_MODE = os.getenv("PAYMENT_MODE", "disabled")
+PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", "").rstrip("/")
+SSLCOMMERZ_STORE_ID = os.getenv("SSLCOMMERZ_STORE_ID", "")
+SSLCOMMERZ_STORE_PASSWORD = os.getenv("SSLCOMMERZ_STORE_PASSWORD", "")
+if PAYMENT_MODE not in {"disabled", "simulation", "sandbox", "live"}:
+    raise ImproperlyConfigured("Select a supported PAYMENT_MODE.")
+if PAYMENT_MODE == "simulation" and not DEBUG:
+    raise ImproperlyConfigured("Payment simulation requires debug mode.")
+if PAYMENT_MODE in {"sandbox", "live"}:
+    if not SSLCOMMERZ_STORE_ID or not SSLCOMMERZ_STORE_PASSWORD:
+        raise ImproperlyConfigured("Set SSLCOMMERZ credentials for the selected mode.")
+    if not PUBLIC_BASE_URL.startswith("https://") or "?" in PUBLIC_BASE_URL or "#" in PUBLIC_BASE_URL:
+        raise ImproperlyConfigured("Set a public HTTPS base URL for gateway callbacks.")
+    if PAYMENT_MODE == "live" and DEBUG:
+        raise ImproperlyConfigured("Live payments require production settings.")

@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.urls import include, path
 
 from accounts.views import staff_home
-from storefront import cart, checkout, views
+from storefront import cart, checkout, payment, views
 
 urlpatterns = [
     path("", views.home, name="home"),
@@ -15,6 +15,9 @@ urlpatterns = [
     path("checkout/", checkout.checkout, name="checkout"),
     path("checkout/place/", checkout.submit, name="order_submit"),
     path("orders/<uuid:reference>/", checkout.order_detail, name="order"),
+    path("orders/<uuid:reference>/pay/", payment.start, name="payment_start"),
+    path("payments/ipn/", payment.ipn, name="payment_ipn"),
+    path("payments/return/", payment.payment_return, name="payment_return"),
     path("account/", include("accounts.urls")),
     path("staff/", staff_home, name="staff"),
     path("healthz", views.health, name="health"),

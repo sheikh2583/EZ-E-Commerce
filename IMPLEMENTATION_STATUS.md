@@ -1,5 +1,11 @@
 # Implementation status
 
+## Phase 7 — Payment gateway
+
+Thirty-five tests passed, including six gateway scenarios with controlled provider HTTP responses. Verified payments consume stock once, confirmed failures release stock, and mismatches or late captures require review. Local simulation never marks an order paid. Real SSLCOMMERZ sandbox verification is externally blocked by merchant test credentials and a public callback endpoint. Lint, types, migration drift and static build passed. See [TESTING.md](TESTING.md).
+
+Checkpoint: `phase-07: integrate payment gateway`. Next: administrative dashboard.
+
 ## Phase 6 — Checkout and order backend
 
 Twenty-nine tests passed. Checkout calculates BDT totals and zone fees on the server, detects a stale or altered quote, stores historical snapshots and supports replay of the same submission without a second order. Separate PostgreSQL transactions verified that only one cart can reserve the last unit. Expiry released inventory once. Chromium verified mobile guest checkout and order privacy. Lint, types, migration drift and static build passed. See [TESTING.md](TESTING.md).
