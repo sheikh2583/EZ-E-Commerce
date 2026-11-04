@@ -13,6 +13,8 @@ services:
     healthCheckPath: /readyz
     envVars:
       - fromGroup: ez-e-commerce-demo-config
+      - key: DJANGO_DEMO_CATALOGUE
+        value: "1"
       - key: DATABASE_URL
         fromDatabase:
           name: ez-e-commerce-demo-db

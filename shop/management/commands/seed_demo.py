@@ -20,13 +20,16 @@ class Command(BaseCommand):
     help = "Add 120 synthetic products and illustrative zones without replacing existing records."
 
     def add_arguments(self, parser) -> None:
-        parser.add_argument("--allow-hosted-sandbox", action="store_true")
+        parser.add_argument("--allow-hosted-demo", "--allow-hosted-sandbox", action="store_true")
 
     @transaction.atomic
     def handle(self, *args, **options) -> None:
-        hosted_sandbox = options["allow_hosted_sandbox"] and settings.PAYMENT_MODE == "sandbox"
-        if settings.PAYMENT_MODE == "live" or not (settings.DEBUG or hosted_sandbox):
-            raise CommandError("Demo seeding requires local debug settings or explicit hosted sandbox mode.")
+        hosted_demo = options["allow_hosted_demo"] and (
+            settings.PAYMENT_MODE == "sandbox"
+            or (settings.PAYMENT_MODE == "disabled" and settings.DEMO_CATALOGUE)
+        )
+        if settings.PAYMENT_MODE == "live" or not (settings.DEBUG or hosted_demo):
+            raise CommandError("Demo seeding requires local debug settings or an explicitly enabled hosted demo.")
         products: list[Product] = []
         for position, (name, items) in enumerate(CATALOGUE.items(), 1):
             category, _ = Category.objects.get_or_create(slug=slugify(name), defaults={"name": name, "position": position})

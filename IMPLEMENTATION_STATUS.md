@@ -1,5 +1,7 @@
 # Implementation status
 
+The Render demo Blueprint now seeds the synthetic catalogue during pre-deploy while payments are disabled. Verified 58 tests and two production-mode pre-deploy runs against a fresh PostgreSQL database.
+
 ## Phase 13 — Deployment preparation
 
 Fifty-seven tests passed including the browser journeys. The Render Blueprint matched the official schema, shell scripts passed syntax checks, and the production build, Gunicorn readiness, secure headers, hashed assets, initial admin setup and maintenance entry points passed locally. A PostgreSQL 17 dump restored into an isolated database with matching counts for 120 products, one synthetic order and 23 migrations. Production rejected simulation. Real hosting, sandbox, Cloudinary and messaging checks are externally pending. See [TESTING.md](TESTING.md).

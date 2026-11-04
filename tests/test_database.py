@@ -93,13 +93,21 @@ class HostedDemoSeed(TestCase):
     def test_seed_requires_explicit_sandbox_flag(self):
         with self.assertRaises(CommandError):
             call_command("seed_demo", stdout=StringIO())
-        call_command("seed_demo", allow_hosted_sandbox=True, stdout=StringIO())
+        call_command("seed_demo", allow_hosted_demo=True, stdout=StringIO())
         self.assertEqual(Product.objects.count(), 120)
 
-    @override_settings(DEBUG=False, PAYMENT_MODE="live")
+    @override_settings(DEBUG=False, PAYMENT_MODE="disabled", DEMO_CATALOGUE=False)
+    def test_disabled_payments_require_hosted_demo_marker(self):
+        with self.assertRaises(CommandError):
+            call_command("seed_demo", allow_hosted_demo=True, stdout=StringIO())
+        with override_settings(DEMO_CATALOGUE=True):
+            call_command("seed_demo", allow_hosted_demo=True, stdout=StringIO())
+        self.assertEqual(Product.objects.count(), 120)
+
+    @override_settings(DEBUG=False, PAYMENT_MODE="live", DEMO_CATALOGUE=True)
     def test_seed_cannot_run_in_live_mode(self):
         with self.assertRaises(CommandError):
-            call_command("seed_demo", allow_hosted_sandbox=True, stdout=StringIO())
+            call_command("seed_demo", allow_hosted_demo=True, stdout=StringIO())
 
 
 class InventoryConcurrency(TransactionTestCase):
