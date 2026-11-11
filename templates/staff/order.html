@@ -22,7 +22,7 @@
         {% if order.payment_review %}<p class="notice">Investigate the payment in the provider dashboard before fulfillment.</p>{% endif %}
         {% for attempt in order.payments.all %}
           <p>{{ attempt.provider }} · {{ attempt.mode }} · {{ attempt.get_state_display }} · {{ attempt.amount|bdt }}</p>
-          <p class="order-reference">{{ attempt.merchant_reference }}{% if attempt.provider_reference %} · {{ attempt.provider_reference }}{% endif %}</p>
+          <p class="order-reference">{{ attempt.merchant_reference }}{% if attempt.provider_reference %} · {{ attempt.provider_reference }}{% elif attempt.pap_payment.payment_id %} · {{ attempt.pap_payment.payment_id }}{% endif %}</p>
           <ul>{% for event in attempt.events.all %}<li>{{ event.created_at|date:"j M H:i" }} · {{ event.outcome }} {{ event.provider_reference }}</li>{% endfor %}</ul>
         {% empty %}<p>No payment attempts.</p>{% endfor %}
       </div>

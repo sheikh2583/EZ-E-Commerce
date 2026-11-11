@@ -23,6 +23,8 @@ urlpatterns = [
     path("orders/<uuid:reference>/pay/", payment.start, name="payment_start"),
     path("payments/ipn/", payment.ipn, name="payment_ipn"),
     path("payments/return/", payment.payment_return, name="payment_return"),
+    path("payments/pap/return/<uuid:reference>/", payment.pap_return, name="pap_return"),
+    path("payments/pap/webhook/", payment.pap_webhook, name="pap_webhook"),
     path("account/", include("accounts.urls")),
     path("staff/", staff.dashboard, name="staff"),
     path("staff/orders/", staff.orders, name="staff_orders"),

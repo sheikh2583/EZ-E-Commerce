@@ -1,7 +1,9 @@
 import hashlib
 import os
+import re
 from pathlib import Path
 from urllib.parse import urlsplit
+from uuid import UUID
 
 import dj_database_url
 from django.core.exceptions import ImproperlyConfigured
@@ -137,20 +139,42 @@ LOGIN_REDIRECT_URL = "account"
 LOGOUT_REDIRECT_URL = "home"
 
 PAYMENT_MODE = os.getenv("PAYMENT_MODE", "disabled")
+PAYMENT_PROVIDER = os.getenv("PAYMENT_PROVIDER", "sslcommerz")
 PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", "").rstrip("/")
 SSLCOMMERZ_STORE_ID = os.getenv("SSLCOMMERZ_STORE_ID", "")
 SSLCOMMERZ_STORE_PASSWORD = os.getenv("SSLCOMMERZ_STORE_PASSWORD", "")
+LCT_API_KEY = os.getenv("LCT_API_KEY", "")
+LCT_ONE_TIME_GRANT_ID = os.getenv("LCT_ONE_TIME_GRANT_ID", "")
+LCT_CHECKOUT_PROVIDER = os.getenv("LCT_CHECKOUT_PROVIDER", "sslcommerz")
+LCT_MERCHANT_ID = os.getenv("LCT_MERCHANT_ID", "")
+LCT_WEBHOOK_SECRET = os.getenv("LCT_WEBHOOK_SECRET", "")
 if PAYMENT_MODE not in {"disabled", "simulation", "sandbox", "live"}:
     raise ImproperlyConfigured("Select a supported PAYMENT_MODE.")
+if PAYMENT_PROVIDER not in {"pap", "sslcommerz"}:
+    raise ImproperlyConfigured("Select a supported PAYMENT_PROVIDER.")
 if PAYMENT_MODE == "simulation" and not DEBUG:
     raise ImproperlyConfigured("Payment simulation requires debug mode.")
 if PAYMENT_MODE in {"sandbox", "live"}:
-    if not SSLCOMMERZ_STORE_ID or not SSLCOMMERZ_STORE_PASSWORD:
-        raise ImproperlyConfigured("Set SSLCOMMERZ credentials for the selected mode.")
     if not PUBLIC_BASE_URL:
         raise ImproperlyConfigured("Set a public HTTPS base URL for gateway callbacks.")
     if PAYMENT_MODE == "live" and DEBUG:
         raise ImproperlyConfigured("Live payments require production settings.")
+    if PAYMENT_PROVIDER == "pap":
+        if not re.fullmatch(rf"sk_{PAYMENT_MODE}_[!-~]+", LCT_API_KEY):
+            raise ImproperlyConfigured("Set an LCT_API_KEY for the selected payment mode.")
+        try:
+            LCT_ONE_TIME_GRANT_ID = str(UUID(LCT_ONE_TIME_GRANT_ID))
+            LCT_MERCHANT_ID = str(UUID(LCT_MERCHANT_ID))
+        except ValueError:
+            raise ImproperlyConfigured("Set valid LCT_ONE_TIME_GRANT_ID and LCT_MERCHANT_ID UUIDs.") from None
+        if not re.fullmatch(r"whsec_[A-Za-z0-9+/]{43}=", LCT_WEBHOOK_SECRET):
+            raise ImproperlyConfigured("Set a valid LCT_WEBHOOK_SECRET.")
+        if LCT_CHECKOUT_PROVIDER not in {"stripe", "sslcommerz"}:
+            raise ImproperlyConfigured("Select a supported LCT_CHECKOUT_PROVIDER.")
+        if PAYMENT_MODE == "live" and LCT_CHECKOUT_PROVIDER == "sslcommerz":
+            raise ImproperlyConfigured("PAP documents SSLCOMMERZ Checkout for sandbox only.")
+    elif not SSLCOMMERZ_STORE_ID or not SSLCOMMERZ_STORE_PASSWORD:
+        raise ImproperlyConfigured("Set SSLCOMMERZ credentials for the selected mode.")
 
 if PUBLIC_BASE_URL:
     public_origin = urlsplit(PUBLIC_BASE_URL)

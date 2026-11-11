@@ -99,7 +99,10 @@ class StatusForm(forms.Form):
 @require_http_methods(["GET", "HEAD", "POST"])
 def order_detail(request: HttpRequest, reference: uuid.UUID) -> HttpResponse:
     require_staff(request, "shop.view_order")
-    order = get_object_or_404(Order.objects.prefetch_related("items", "payments__events", "status_events"), reference=reference)
+    order = get_object_or_404(
+        Order.objects.prefetch_related("items", "payments__events", "payments__pap_payment", "status_events"),
+        reference=reference,
+    )
     can_change = request.user.has_perm("shop.change_order")
     if request.method == "POST" and not can_change:
         raise PermissionDenied

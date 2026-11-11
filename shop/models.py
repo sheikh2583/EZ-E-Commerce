@@ -292,6 +292,33 @@ class PaymentAttempt(models.Model):
         ]
 
 
+class PapPayment(models.Model):
+    attempt = models.OneToOneField(PaymentAttempt, models.PROTECT, related_name="pap_payment")
+    payment_id = models.UUIDField(null=True, unique=True)
+    payment_key = models.UUIDField(default=uuid.uuid4, editable=False)
+    checkout_key = models.UUIDField(default=uuid.uuid4, editable=False)
+    grant_id = models.UUIDField()
+    checkout_provider = models.CharField(max_length=12)
+    return_url = models.URLField(max_length=1000)
+    checkout_requested = models.BooleanField(default=False)
+
+
+class PapWebhookEvent(models.Model):
+    id = models.UUIDField(primary_key=True, editable=False)
+    mode = models.CharField(max_length=12)
+    merchant_id = models.UUIDField()
+    payload = models.JSONField()
+    received_at = models.DateTimeField(auto_now_add=True)
+    checked_at = models.DateTimeField(null=True)
+    processed_at = models.DateTimeField(null=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["mode", "merchant_id", "checked_at"], condition=Q(processed_at__isnull=True),
+                         name="pap_webhook_pending"),
+        ]
+
+
 class PaymentEvent(models.Model):
     attempt = models.ForeignKey(PaymentAttempt, models.PROTECT, related_name="events")
     fingerprint = models.CharField(max_length=64)

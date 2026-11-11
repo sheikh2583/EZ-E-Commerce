@@ -40,7 +40,7 @@ class SecurityChecks(TestCase):
     def test_large_bodies_are_rejected_and_sandbox_form_target_is_allowed(self):
         response = self.client.post(reverse("payment_ipn"), "a" * 300000, content_type="text/plain")
         self.assertEqual(response.status_code, 413)
-        with override_settings(PAYMENT_MODE="sandbox"):
+        with override_settings(PAYMENT_PROVIDER="sslcommerz", PAYMENT_MODE="sandbox"):
             response = self.client.get(reverse("home"))
         policy = response["Content-Security-Policy"]
         self.assertIn("frame-ancestors 'none'", policy)

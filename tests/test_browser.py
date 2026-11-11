@@ -251,7 +251,7 @@ class BrowserTests(StaticLiveServerTestCase):
         self.database(order.refresh_from_db)
         self.assertEqual((order.state, order.tracking_number), (Order.State.CONFIRMED, "TEST-TRACK-01"))
 
-    @override_settings(PAYMENT_MODE="sandbox", PUBLIC_BASE_URL="https://store.example.test")
+    @override_settings(PAYMENT_PROVIDER="sslcommerz", PAYMENT_MODE="sandbox", PUBLIC_BASE_URL="https://store.example.test")
     def test_guest_checkout_and_staff_journey(self):
         self.seed()
         User.objects.create_superuser("staff-journey@example.test", self.password)
@@ -270,7 +270,7 @@ class BrowserTests(StaticLiveServerTestCase):
                 recovered.goto(self.live_server_url + "/orders/access/#" + make_token(order))
                 expect(recovered.get_by_text("TEST-TRACK-01", exact=False)).to_be_visible()
 
-    @override_settings(PAYMENT_MODE="sandbox", PUBLIC_BASE_URL="https://store.example.test")
+    @override_settings(PAYMENT_PROVIDER="sslcommerz", PAYMENT_MODE="sandbox", PUBLIC_BASE_URL="https://store.example.test")
     def test_registered_checkout_and_order_history(self):
         self.seed()
         with sync_playwright() as playwright:

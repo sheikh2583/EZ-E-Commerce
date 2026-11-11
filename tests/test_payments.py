@@ -11,7 +11,7 @@ from .test_checkout import fixtures, review
 
 
 @override_settings(
-    PAYMENT_MODE="sandbox", PUBLIC_BASE_URL="https://store.example.test",
+    PAYMENT_PROVIDER="sslcommerz", PAYMENT_MODE="sandbox", PUBLIC_BASE_URL="https://store.example.test",
     SSLCOMMERZ_STORE_ID="store-placeholder", SSLCOMMERZ_STORE_PASSWORD="placeholder",
 )
 class Payments(TestCase):

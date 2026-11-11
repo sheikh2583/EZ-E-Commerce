@@ -5,6 +5,7 @@ from decimal import Decimal, InvalidOperation
 
 from django.conf import settings
 from django.db import IntegrityError, transaction
+from django.urls import reverse
 from django.utils import timezone
 
 from .gateway import HOSTS, Gateway
@@ -12,6 +13,7 @@ from .models import (
     InventoryReservation,
     Order,
     OrderStatusEvent,
+    PapPayment,
     PaymentAttempt,
     PaymentEvent,
 )
@@ -40,20 +42,28 @@ def begin(order_id: int) -> tuple[PaymentAttempt, bool]:
         Order.PaymentState.UNPAID, Order.PaymentState.PENDING,
     ):
         raise PaymentError("This order is not available for payment.")
+    provider = settings.PAYMENT_PROVIDER if settings.PAYMENT_MODE in HOSTS else "simulation"
     attempt = order.payments.filter(state=PaymentAttempt.State.PENDING).first()
     if attempt:
-        if attempt.mode != settings.PAYMENT_MODE:
-            raise PaymentError("This payment uses a different environment.")
+        if attempt.mode != settings.PAYMENT_MODE or attempt.provider != provider:
+            raise PaymentError("This payment uses a different gateway or environment.")
         return attempt, False
     if not InventoryReservation.objects.filter(
         item__order=order, state=InventoryReservation.State.HELD, expires_at__gt=timezone.now(),
     ).exists():
         raise PaymentError("Your reservation expired. Please place a new order.")
     attempt = PaymentAttempt.objects.create(
-        order=order, provider="sslcommerz" if settings.PAYMENT_MODE in HOSTS else "simulation",
+        order=order, provider=provider,
         mode=settings.PAYMENT_MODE, merchant_reference=uuid.uuid4().hex[:30],
         amount=order.total, currency=order.currency,
     )
+    if provider == "pap":
+        PapPayment.objects.create(
+            attempt=attempt,
+            grant_id=settings.LCT_ONE_TIME_GRANT_ID,
+            checkout_provider=settings.LCT_CHECKOUT_PROVIDER,
+            return_url=settings.PUBLIC_BASE_URL + reverse("pap_return", args=[order.reference]),
+        )
     order.payment_state = Order.PaymentState.PENDING
     order.save(update_fields=["payment_state", "updated_at"])
     audit(attempt, "created")
@@ -126,10 +136,7 @@ def apply_validation(attempt: PaymentAttempt, validation_id: str, result: dict) 
         flag_review(order, attempt, "missing_provider_reference")
         return "review"
     if attempt.state in (PaymentAttempt.State.VERIFIED, PaymentAttempt.State.REFUNDED):
-        if bank_id != attempt.provider_reference:
-            flag_review(order, attempt, "second_capture", bank_id)
-            return "review"
-        return "verified"
+        return accept_capture(order, attempt, bank_id)
     if (
         not matches_amount(result.get("amount"), attempt.amount) or result.get("currency") != attempt.currency
         or result.get("currency_type", attempt.currency) != attempt.currency
@@ -138,32 +145,42 @@ def apply_validation(attempt: PaymentAttempt, validation_id: str, result: dict) 
     ):
         flag_review(order, attempt, "amount_currency_or_risk", bank_id)
         return "review"
+    return accept_capture(order, attempt, bank_id)
+
+
+def accept_capture(order: Order, attempt: PaymentAttempt, reference: str) -> str:
+    # Call with the order and attempt locked in the same transaction.
+    if attempt.state in (PaymentAttempt.State.VERIFIED, PaymentAttempt.State.REFUNDED):
+        if reference != attempt.provider_reference:
+            flag_review(order, attempt, "second_capture", reference)
+            return "review"
+        return "verified"
     if order.state != Order.State.PENDING or order.accepted_payment_id or not InventoryReservation.objects.filter(
         item__order=order, state=InventoryReservation.State.HELD,
     ).exists():
-        flag_review(order, attempt, "late_or_duplicate_capture", bank_id)
+        flag_review(order, attempt, "late_or_duplicate_capture", reference)
         return "review"
 
     attempt.state = PaymentAttempt.State.VERIFIED
-    attempt.provider_reference = bank_id
+    attempt.provider_reference = reference
     attempt.verified_at = timezone.now()
     try:
         with transaction.atomic():
             attempt.save(update_fields=["state", "provider_reference", "verified_at", "updated_at"])
     except IntegrityError:
         if not PaymentAttempt.objects.filter(
-            provider=attempt.provider, mode=attempt.mode, provider_reference=bank_id,
+            provider=attempt.provider, mode=attempt.mode, provider_reference=reference,
         ).exclude(pk=attempt.pk).exists():
             raise
         attempt.refresh_from_db()
-        flag_review(order, attempt, "duplicate_provider_reference", bank_id)
+        flag_review(order, attempt, "duplicate_provider_reference", reference)
         return "review"
     change_reservations(order, InventoryReservation.State.CONSUMED)
     order.accepted_payment = attempt
     order.payment_state = Order.PaymentState.PAID
     order.payment_review = False
     order.save(update_fields=["accepted_payment", "payment_state", "payment_review", "updated_at"])
-    audit(attempt, "verified", reference=bank_id)
+    audit(attempt, "verified", reference=reference)
     enqueue(order, f"payment:{attempt.pk}", "paid")
     return "verified"
 

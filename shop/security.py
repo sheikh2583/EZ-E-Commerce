@@ -9,6 +9,7 @@ from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.utils import timezone
 from django.utils.crypto import salted_hmac
 
+from . import pap
 from .gateway import HOSTS
 
 logger = logging.getLogger(__name__)
@@ -22,6 +23,8 @@ RULES = {
     "payment_start": ("payment_start", 20, 300),
     "payment_ipn": ("payment_callback", 120, 60),
     "payment_return": ("payment_callback", 120, 60),
+    "pap_return": ("payment_callback", 120, 60),
+    "pap_webhook": ("pap_webhook", 240, 60),
     "guest_order_access": ("guest_link", 25, 300),
     "staff_images": ("upload", 30, 300),
 }
@@ -67,7 +70,11 @@ class SecurityBoundary:
         response = self.get_response(request)
         if response.get("Content-Type", "").startswith("text/html"):
             form_sources = "'self'"
-            if settings.PAYMENT_MODE in HOSTS:
+            if pap.enabled():
+                form_sources += f" https://{pap.CHECKOUT_HOSTS['stripe']}"
+                if settings.PAYMENT_MODE == "sandbox":
+                    form_sources += f" https://{pap.CHECKOUT_HOSTS['sslcommerz']}"
+            elif settings.PAYMENT_MODE in HOSTS:
                 form_sources += f" https://{HOSTS[settings.PAYMENT_MODE]}"
             styles = "'self'"
             if request.path_info.startswith("/staff/catalogue/"):
@@ -80,9 +87,12 @@ class SecurityBoundary:
         return response
 
     def process_view(self, request: HttpRequest, view_func, view_args, view_kwargs) -> HttpResponse | None:
-        if request.method != "POST" or request.resolver_match is None:
+        if request.resolver_match is None:
             return None
-        rule = RULES.get(request.resolver_match.view_name)
+        view_name = request.resolver_match.view_name
+        if request.method != "POST" and view_name != "pap_return":
+            return None
+        rule = RULES.get(view_name)
         if rule is None:
             return None
         scope, limit, window = rule
