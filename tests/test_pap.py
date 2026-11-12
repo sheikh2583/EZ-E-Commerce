@@ -151,7 +151,7 @@ class PapPayments(TestCase):
         event = self.event()
         self.assertEqual(self.deliver(event, tamper=True).status_code, 401)
         self.assertEqual(self.deliver(event, age=301).status_code, 401)
-        self.assertEqual(self.deliver(self.event(environment="live")).status_code, 401)
+        self.assertEqual(self.deliver(self.event(environment="production")).status_code, 401)
         self.assertEqual(self.deliver(self.event(merchantId=str(uuid4()))).status_code, 401)
         self.assertEqual(self.deliver(event).status_code, 204)
         self.assertEqual(self.deliver(event).status_code, 204)
@@ -170,6 +170,27 @@ class PapPayments(TestCase):
         self.assertEqual(self.order.payment_state, Order.PaymentState.PAID)
         self.assertEqual(PaymentEvent.objects.filter(outcome="verified").count(), 1)
         self.assertIsNotNone(PapWebhookEvent.objects.get().processed_at)
+
+    @override_settings(LCT_CHECKOUT_PROVIDER="stripe", LCT_API_KEY="sk_live_fixture", PAYMENT_MODE="live")
+    def test_live_webhook_accepts_production_events_and_reconciles_live_payment(self):
+        hosted = "https://checkout.stripe.com/c/pay/session"
+        session = {"paymentId": self.payment_id, "state": "ready", "checkoutUrl": hosted}
+        with patch("shop.pap.request_json", side_effect=[self.payment(), session]):
+            self.assertRedirects(self.client.post(self.start), hosted, fetch_redirect_response=False)
+
+        challenge = self.event(
+            "webhook.endpoint_verification", environment="production", data={"challenge": "live-fixture"},
+        )
+        self.assertEqual(self.deliver(challenge)["x-lct-webhook-challenge"], "live-fixture")
+        self.assertEqual(self.deliver(self.event()).status_code, 401)
+        self.assertEqual(self.deliver(self.event(environment="production")).status_code, 204)
+        self.assertEqual(PapWebhookEvent.objects.get().mode, "live")
+
+        with patch("shop.pap.request_json", return_value=self.payment("succeeded")) as transport:
+            call_command("reconcile_payments", stdout=StringIO())
+        self.assertEqual(transport.call_args.args[0].full_url, f"https://pap.ezassist.me/v1/payments/{self.payment_id}")
+        self.order.refresh_from_db()
+        self.assertEqual(self.order.payment_state, Order.PaymentState.PAID)
 
     def test_reconciliation_checks_provider_when_return_and_webhook_are_missing(self):
         self.initiate()

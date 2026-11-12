@@ -41,8 +41,9 @@ def verify(raw_body: bytes, headers: Mapping[str, str]) -> tuple[UUID, dict] | N
         event = json.loads(raw_body.decode("utf-8"))
     except (ValueError, RecursionError):
         return None
+    environment = "production" if settings.PAYMENT_MODE == "live" else settings.PAYMENT_MODE
     if (not isinstance(event, dict) or event.get("id") != header_id or event.get("apiVersion") != "2026-11-04"
-            or event.get("environment") != settings.PAYMENT_MODE or event.get("merchantId") != settings.LCT_MERCHANT_ID):
+            or event.get("environment") != environment or event.get("merchantId") != settings.LCT_MERCHANT_ID):
         return None
     return event_id, event
 

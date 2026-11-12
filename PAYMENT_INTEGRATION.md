@@ -29,7 +29,25 @@ Deploy the app with these settings. The Render release script applies the migrat
 3. The return handler reads `GET /v1/payments/{paymentId}`. The webhook handler verifies the signature and stores events by ID. The maintenance job reads the latest payment status for those events and reconciles pending attempts when a return or notification is missing.
 4. `succeeded` with the expected payment ID, order reference, amount and currency marks the order paid and consumes reserved stock once. Confirmed `failed` or `expired` results release stock. A browser cancellation can leave the checkout open and the order pending. A mismatched successful payment or a capture after the reservation was released goes to staff review.
 
-For live PaP, use `PAYMENT_MODE=live`, live workspace credentials and an active Stripe one-time grant that supports the order currency. Complete a sandbox checkout and verify the webhook and maintenance job before switching environments. Reconcile outstanding attempts before changing the active gateway, mode or merchant account.
+### Switch Stripe Checkout to live
+
+Complete sandbox UAT and confirm production activation in PaP. In the **Live** workspace, check that the active Stripe one-time card grant supports BDT and lists the production store's HTTPS origin. Reconcile any outstanding sandbox attempts before switching an existing store to live. [PaP live quickstart](https://pap.ezassist.me/api-documentation?environment=live#quickstart)
+
+Register a webhook in the **Live** workspace for the same five payment events at `<PUBLIC_BASE_URL>/payments/pap/webhook/`. Save its signing secret. Configure these values together for the deployed web service and maintenance job.
+
+```dotenv
+DJANGO_DEBUG=0
+PAYMENT_PROVIDER=pap
+PAYMENT_MODE=live
+LCT_CHECKOUT_PROVIDER=stripe
+PUBLIC_BASE_URL=https://shop.example.com
+LCT_API_KEY=<live Developer key starting with sk_live_>
+LCT_ONE_TIME_GRANT_ID=<active live Stripe grant ID>
+LCT_MERCHANT_ID=<live workspace merchant ID>
+LCT_WEBHOOK_SECRET=<live endpoint signing secret>
+```
+
+Live mode uses `https://pap.ezassist.me/v1`. PaP sends `environment: production` on live webhooks, and the receiver checks that value in live mode. Deploy the settings and select **Verify endpoint** in the Live workspace. Confirm that the verification delivery succeeds and that the maintenance job can process live payment events. [PaP live webhook documentation](https://pap.ezassist.me/api-documentation?environment=live#webhooks)
 
 ## Direct SSLCOMMERZ integration
 
