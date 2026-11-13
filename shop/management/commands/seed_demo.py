@@ -46,8 +46,8 @@ class Command(BaseCommand):
                         featured=finish_index == 0 and item_index == 0,
                     ))
         Product.objects.bulk_create(products, ignore_conflicts=True)
-        DeliveryZone.objects.get_or_create(code="inside-dhaka", defaults={"name": "Inside Dhaka", "fee": 8000})
-        DeliveryZone.objects.get_or_create(code="outside-dhaka", defaults={"name": "Outside Dhaka", "fee": 14000})
+        DeliveryZone.objects.get_or_create(code="inside-dhaka", defaults={"name": "Inside Dhaka"})
+        DeliveryZone.objects.get_or_create(code="outside-dhaka", defaults={"name": "Outside Dhaka"})
         StoreSettings.objects.get_or_create(pk=1, defaults={
             "banner_title": "Everyday essentials",
             "banner_body": "Explore considered finds for home, work and the road.",

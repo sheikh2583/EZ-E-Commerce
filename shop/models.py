@@ -77,7 +77,7 @@ class ProductImage(models.Model):
 class DeliveryZone(models.Model):
     name = models.CharField(max_length=100)
     code = models.SlugField(unique=True)
-    fee = models.PositiveBigIntegerField()
+    fee = models.PositiveBigIntegerField(default=0)
     active = models.BooleanField(default=True)
 
     class Meta:
